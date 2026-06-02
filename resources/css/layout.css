@@ -1,0 +1,52 @@
+.app-topstrip {
+    background: linear-gradient(90deg, #001138, #001e66);
+}
+
+.app-topstrip .text-linear-gradient {
+    background: linear-gradient(90deg, #fff, #3772ff);
+    -webkit-background-clip: text;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.left-sidebar .scroll-sidebar,
+.page-wrapper {
+  height: calc(100vh - 76px)
+}
+
+/* @media screen and (max-width:991px) {
+  .left-sidebar .scroll-sidebar {
+    height: calc(100vh - 72px)
+  }
+} */
+
+#sidebarnav .sidebar-item .sidebar-link.active {
+  background-color: #030713;
+  color: #fff
+}
+
+#sidebarnav .sidebar-item .sidebar-link {
+  align-items: center;
+  border-radius: 7px;
+  display: flex;
+  font-size: 14px;
+  font-weight: 400;
+  gap: 15px;
+  line-height: 25px;
+  margin: 0 0 2px;
+  padding: 8px 12px;
+  position: relative;
+  text-decoration: none;
+  white-space: nowrap
+}
+
+#sidebarnav .sidebar-item .second-level {
+  padding-left: 30px
+}
+
+/* .dropdown:hover .dropdown-menu {
+  display: block;
+} */
+
