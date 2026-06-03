@@ -1,5 +1,5 @@
 <x-layout>
-    <div class="py-15 container flex flex-col gap-6">
+    <div class="container flex flex-col gap-6 py-5">
 
         <h1 class="my-5 text-center text-4xl">Easily keep the track of your subscriptions with
             <span class="font-bold">SubsTrack</span>

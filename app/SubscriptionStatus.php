@@ -4,9 +4,9 @@ namespace App;
 
 enum SubscriptionStatus: string
 {
-    case ACTIVE = "active";
-    case PAUSED = "paused";
-    case CANCELED = "canceled";
+    case ACTIVE = 'active';
+    case PAUSED = 'paused';
+    case CANCELED = 'canceled';
 
     public function label(): string
     {
@@ -15,5 +15,10 @@ enum SubscriptionStatus: string
             self::PAUSED => 'Paused',
             self::CANCELED => 'Canceled',
         };
+    }
+
+    public static function values(): array
+    {
+        return array_map(fn (SubscriptionStatus $status) => $status->value, self::cases());
     }
 }

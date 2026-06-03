@@ -2,18 +2,38 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Subscription;
 use App\Http\Requests\StoreSubscriptionRequest;
 use App\Http\Requests\UpdateSubscriptionRequest;
+use App\Models\Subscription;
+use App\SubscriptionStatus;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SubscriptionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $user = Auth::user();
+        $status = $request->st;
+
+        // validate the query /simple/
+        if (! in_array($status, SubscriptionStatus::values())) {
+            $status = null;
+        }
+
+        $subscriptions = $user
+            ->subscriptions()
+            ->when($status, fn ($query, $status) => $query->where('status', $status))
+            ->get();
+
+        return view('subscription.index', [
+            'subscriptions' => $subscriptions,
+            'statusCount' => Subscription::statusCount($user),
+        ]);
+
     }
 
     /**

@@ -30,7 +30,7 @@
                     </li>
                     <li class="sidebar-item">
                         <a class="sidebar-link hover:text-primary hover:bg-primary/15 flex w-full items-center justify-between gap-3 rounded-md px-3 py-3"
-                            href="#">
+                            href="{{ route('subscription.index') }}">
                             <span class="flex items-center gap-3">
                                 <i class="ti ti-wallet text-xl"></i>
                                 <span>Subscriptions</span>

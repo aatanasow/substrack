@@ -1,5 +1,3 @@
-<div {{ $attributes -> merge(['class' => 'card']) }}>
-    <div class="card-body flex flex-col gap-6">
-        {{ $slot }}
-    </div>
+<div {{ $attributes->merge(['class' => 'card card-body flex flex-col gap-6']) }}>
+    {{ $slot }}
 </div>

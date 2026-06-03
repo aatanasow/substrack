@@ -27,7 +27,7 @@ class SessionsController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('landing'))->with('success', 'You are now logged in');
+        return redirect()->intended(route('subscription.index'))->with('success', 'You are now logged in');
     }
 
     public function destroy(Request $request)

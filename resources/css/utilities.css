@@ -59,6 +59,12 @@
     background-color: var(--color-primary);
     color: var(--color-white);
 }
+.pill{
+    @apply bg-secondary border border-secondary text-white items-center gap-x-1.5 py-1 leading-3 px-2 rounded-md text-xs font-medium
+}
+.pill.outlined{
+    @apply bg-white border border-secondary text-secondary
+}
 .card-body {
     padding: calc(var(--spacing) * 6);
 }
