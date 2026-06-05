@@ -13,7 +13,6 @@
 </head>
 
 <body class="bg-info/5">
-    <main>
         <x-layout.nav>
 
         </x-layout.nav>
@@ -43,7 +42,6 @@
         </div>
 
         <!--end of project-->
-    </main>
 
     @session('success')
         <div class="bg-primary text-white px-4 py-3 absolute top-25 right-4 rounded-lg animate-flash-fade-out opacity-0">{{ $value }}</div>

@@ -37,7 +37,8 @@
 }
 .btn,
 .btn-empty,
-.btn-outline-primary {
+.btn-outline-primary,
+.btn-danger {
     font-size: var(--text-sm);
     font-weight: var(--font-weight-medium);
     line-height: var(--tw-leading, var(--text-sm--line-height));
@@ -59,15 +60,66 @@
     background-color: var(--color-primary);
     color: var(--color-white);
 }
-.pill{
-    @apply bg-secondary border border-secondary text-white items-center gap-x-1.5 py-1 leading-3 px-2 rounded-md text-xs font-medium
+.btn-danger {
+    background-color: var(--color-error);
+    color: var(--color-white);
 }
-.pill.outlined{
-    @apply bg-white border border-secondary text-secondary
+/* input[type="radio"] + label {
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--tw-leading, var(--text-sm--line-height));
+    padding-block: calc(var(--spacing) * 2);
+    padding-inline: calc(var(--spacing) * 4);
+    text-align: center;
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--color-primary);
+    cursor: pointer;
+    border: 1px solid var(--color-primary);
 }
-.card-body {
+input[type="radio"]:checked + label {
+    background: var(--color-primary);
+    border: none;
+    color: var(--color-white);
+} */
+/* input[type="file"] {
+    display: block;
+    width: 100%;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: var(--color-black);
+    border: 1px solid var(--color-primary);
+} */
+input[type="file"]::file-selector-button {
+    margin-right: calc(var(--spacing) * 4);
+    padding: calc(var(--spacing) * 2) calc(var(--spacing) * 4);
+    border-radius: calc(var(--spacing) * 2);
+    border-width: 0;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    background-color: var(--color-primary);
+    color: var(--color-white);
+}
+input[type="file"]::file-selector-button:hover {
+    opacity: 0.9;
+}
+.pill {
+    @apply bg-blue-500 border border-blue-500 text-white items-center gap-x-1.5 py-1 leading-3 px-2 rounded-md text-xs font-medium;
+}
+.pill.outlined {
+    @apply bg-white border border-blue-500 text-blue-500;
+}
+.card {
     padding: calc(var(--spacing) * 6);
 }
+.card-section {
+    background-color: var(--color-gray-50);
+    border-radius: var(--radius-md);
+    padding-block: calc(var(--spacing) * 4);
+    padding-inline: calc(var(--spacing) * 4);
+}
+
 .hs-overlay.open {
     --tw-translate-x: calc(var(--spacing) * 0);
     translate: var(--tw-translate-x) var(--tw-translate-y);
@@ -75,7 +127,7 @@
     /* position: sticky; */
 }
 .icon-circle {
-    background-color: rgb(var( --bs-dark-rgb));
+    background-color: rgb(var(--bs-dark-rgb));
     display: inline-block;
     width: 15px;
     height: 15px;
@@ -93,7 +145,7 @@
 }
 
 .icon-circle:before {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     right: 0;

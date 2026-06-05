@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\SubscriptionCurrency;
+use App\SubscriptionFrequency;
 use App\SubscriptionStatus;
 use Database\Factories\SubscriptionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,10 +21,14 @@ class Subscription extends Model
     protected $casts = [
         'start_date' => 'date',
         'status' => SubscriptionStatus::class,
+        'frequency' => SubscriptionFrequency::class,
+        'currency' => SubscriptionCurrency::class,
     ];
 
     protected $attributes = [
         'status' => SubscriptionStatus::ACTIVE->value,
+        'frequency' => SubscriptionFrequency::MONTHLY->value,
+        'currency' => SubscriptionCurrency::EUR->value,
     ];
 
     public function user(): BelongsTo
@@ -35,9 +41,9 @@ class Subscription extends Model
     //     return Carbon::parse($value)->format('Y-m-d');
     // }
 
-    public function formatPrice(float $price, string $currency)
+    public static function formatPrice(float $price, SubscriptionCurrency $currency)
     {
-        return Number::withCurrency($currency, function () use ($price) {
+        return Number::withCurrency($currency->value, function () use ($price) {
             return Number::currency($price);
         });
     }
@@ -58,4 +64,5 @@ class Subscription extends Model
             ->put('all', $user->subscriptions()->count());
 
     }
+
 }

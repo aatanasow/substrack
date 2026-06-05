@@ -22,7 +22,7 @@
             </button>
 
             <div class="flex items-center justify-center gap-2">
-                <p class="text-base font-medium text-gray-500">New to SubsTrack?</p>
+                <p class="text-sm font-medium text-gray-500">New to SubsTrack?</p>
                 <a href="/register"
                     class="text-sm font-medium text-blue-600 hover:text-blue-700">Create an account</a>
             </div>

@@ -21,4 +21,12 @@ enum SubscriptionStatus: string
     {
         return array_map(fn (SubscriptionStatus $status) => $status->value, self::cases());
     }
+
+    public static function options(): array
+    {
+        return collect(SubscriptionStatus::cases())
+            ->mapWithKeys(fn ($option) => [
+                $option->value => $option->label()
+            ])->toArray();
+    }
 }

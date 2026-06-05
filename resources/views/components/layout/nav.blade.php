@@ -10,6 +10,10 @@
                 <i class="ti ti-help-circle text-xl"></i>
                 Help
             </a>
+            <a href="{{ route('contact') }}" class="hover:text-primary hidden items-center gap-2 text-base text-white sm:flex">
+                <i class="ti ti-mail text-xl"></i>
+                Contact Us
+            </a>
 
         </div>
         <div class="flex items-center gap-3">
@@ -108,10 +112,10 @@
                                     <i class="ti ti-mail text-xl text-gray-500"></i>
                                     <p class="text-dark text-sm">My Account</p>
                                 </a>
-                                <a href="javascript:void(0)"
+                                <a href="{{ route('subscription.create') }}"
                                     class="hover:bg-primary/10 flex items-center gap-2 px-4 py-2.5">
                                     <i class="ti ti-list-check text-xl text-gray-500"></i>
-                                    <p class="text-dark text-sm">My Task</p>
+                                    <p class="text-dark text-sm">New Subscription</p>
                                 </a>
                                 <div class="mt-1.75 grid px-4">
                                     <form action="/logout" method="POST">
