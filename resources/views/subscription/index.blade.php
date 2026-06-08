@@ -59,17 +59,19 @@
                                     {{ $subscription->status->label() }}
                                 </x-status-label>
                             </x-table.data>
-                            <x-table.data>
+                            <x-table.data class="w-25">
                                 <span
                                     class="text-dark text-base font-semibold">{{ $subscription->formatPrice($subscription->price, $subscription->currency) }}
                                 </span>
                             </x-table.data>
-                            <x-table.data>
+                            <x-table.data class="text-right w-25">
                                 <div class="space-x-2">
                                     <a href="{{ route('subscription.show', $subscription) }}">
                                         <i class="ti ti-eye hover:text-primary text-xl"></i>
                                     </a>
-                                    <i class="ti ti-edit text-xl"></i>
+                                    <a href="{{ route('subscription.edit', ['subscription' => $subscription->id]) }}">
+                                        <i class="ti ti-edit hover:text-primary text-xl"></i>
+                                    </a>
                                 </div>
                             </x-table.data>
                         </x-table.row>

@@ -6,10 +6,10 @@
         <div class="px-6 pt-8">
             <nav class="sidebar-nav flex w-full flex-col">
                 <ul id="sidebarnav" class="text-dark text-sm">
-                    <li class="pb-4 text-xs font-bold">
+                    {{-- <li class="pb-4 text-xs font-bold">
                         <i class="ti ti-dots nav-small-cap-icon hidden text-center text-lg"></i>
                         <span>HOME</span>
-                    </li>
+                    </li> --}}
 
                     <li class="sidebar-item">
                         <a class="sidebar-link hover:text-primary hover:bg-primary/15 flex w-full items-center gap-3 rounded-md px-3 py-3"

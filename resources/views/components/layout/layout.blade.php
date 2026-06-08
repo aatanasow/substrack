@@ -44,7 +44,7 @@
         <!--end of project-->
 
     @session('success')
-        <div class="bg-primary text-white px-4 py-3 absolute top-25 right-4 rounded-lg animate-flash-fade-out opacity-0">{{ $value }}</div>
+        <div class="bg-success text-white px-4 py-3 absolute top-25 right-4 rounded-lg animate-flash-fade-out opacity-0">{{ $value }}</div>
     @endsession
 
 </body>

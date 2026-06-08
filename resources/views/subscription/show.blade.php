@@ -9,10 +9,10 @@
             </a>
 
             <div class="flex items-center gap-x-2">
-                <button class="btn hover:bg-blue-700/80" id="btn">
+                <a href="{{ route('subscription.edit', $subscription) }}" class="btn hover:bg-blue-700/80" id="btn">
                     <i class="ti ti-edit text-base"></i>
                     Edit
-                </button>
+                </a>
 
                 <form action="{{ route('subscription.destroy', $subscription) }}" method="post">
                     @csrf

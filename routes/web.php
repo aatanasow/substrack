@@ -3,6 +3,7 @@
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SessionsController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\SubscriptionImageController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {return view('welcome');})->name('landing');
@@ -14,9 +15,11 @@ Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('su
 Route::get('/subscriptions/create', [SubscriptionController::class, 'create'])->name('subscription.create')->middleware('auth');
 Route::post('/subscriptions', [SubscriptionController::class, 'store'])->name('subscription.store')->middleware('auth');
 Route::get('/subscriptions/{subscription}', [SubscriptionController::class, 'show'])->name('subscription.show')->middleware('auth');
-Route::get('/subscriptions/{subscription}/edit', [SubscriptionController::class, 'edit'])->name('subscription.show')->middleware('auth');
-Route::patch('/subscriptions/{subscription}', [SubscriptionController::class, 'update'])->name('subscription.show')->middleware('auth');
+Route::get('/subscriptions/{subscription}/edit', [SubscriptionController::class, 'edit'])->name('subscription.edit')->middleware('auth');
+Route::patch('/subscriptions/{subscription}', [SubscriptionController::class, 'update'])->name('subscription.update')->middleware('auth');
 Route::delete('/subscriptions/{subscription}', [SubscriptionController::class, 'destroy'])->name('subscription.destroy')->middleware('auth');
+
+Route::delete('/ideas/{subscription}/image', [SubscriptionImageController::class, 'destroy'])->name('subscription.image.destroy')->middleware('auth');
 
 Route::get('/register', [RegisteredUserController::class, 'create'])->name('register')->middleware('guest');
 Route::post('/register', [RegisteredUserController::class, 'store'])->middleware('guest');
