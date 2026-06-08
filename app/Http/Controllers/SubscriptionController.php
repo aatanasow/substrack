@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SubscriptionRequest;
 use App\Models\Subscription;
-use App\SubscriptionStatus;
+use App\Enums\SubscriptionStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -52,21 +52,19 @@ class SubscriptionController extends Controller
      */
     public function store(SubscriptionRequest $request)
     {
-        // dd($request->all());
+        // dd($request->validated());
 
-        $data = collect($request->safe()->all())->only([
-            'title', 'description', 'start_date', 'price', 'currency', 'status', 'frequency', 'notify', 'link',
-        ])->toArray();
+        $data = $request->safe()->except(['image_path']);
 
-        DB::transaction(function () use ($request, $data) {
-            if ($request->image_path ?? false) {
-                $data['image_path'] = $request->image_path->store('subscriptions', 'public');
-            }
+        if ($request->image_path) {
+            $data['image_path'] = $request->image_path->store('subscriptions', 'public');
+        }
 
+        Auth::user()->subscriptions()->create($data);
+        // DB::transaction(function () use ($request, $data) {
             // Auth::user()->subscriptions()->create($request->validated());
             // Auth::user()->subscriptions()->create($request->safe()->except('image_path'));
-            Auth::user()->subscriptions()->create($data);
-        });
+        // });
 
         return to_route('subscription.index')->with('success', 'Subscription created');
     }
@@ -103,20 +101,18 @@ class SubscriptionController extends Controller
         // dd($request->all());
         Gate::authorize('workWith', $subscription);
 
-        $data = collect($request->safe()->all())->only([
-            'title', 'description', 'start_date', 'price', 'currency', 'status', 'frequency', 'notify', 'link',
-        ])->toArray();
+        $data = $request->safe()->except(['image_path']);
 
-        DB::transaction(function () use ($request, $data, $subscription) {
-            if ($request->image_path ?? false) {
-                if ($subscription->image_path ?? false) {
-                    Storage::disk('public')->delete($subscription->image_path);
-                }
-                $data['image_path'] = $request->image_path->store('subscriptions', 'public');
+        if ($request->image_path ?? false) {
+            if ($subscription->image_path ?? false) {
+                Storage::disk('public')->delete($subscription->image_path);
             }
+            $data['image_path'] = $request->image_path->store('subscriptions', 'public');
+        }
 
-            $subscription->update($data);
-        });
+        $subscription->update($data);
+        // DB::transaction(function () use ($request, $data, $subscription) {
+        // });
 
         return to_route('subscription.index')->with('success', 'Subscription updated');
     }

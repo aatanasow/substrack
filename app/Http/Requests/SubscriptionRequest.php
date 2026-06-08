@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\SubscriptionStatus;
+use App\Enums\SubscriptionStatus;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;

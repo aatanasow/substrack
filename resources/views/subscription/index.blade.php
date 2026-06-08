@@ -20,7 +20,7 @@
                         class="pill {{ request()->has('st') ? 'outlined' : '' }}">All
                         <span class="pl-3 text-xs">{{ $statusCount->get('all') }}</span>
                     </a>
-                    @foreach (App\SubscriptionStatus::cases() as $status)
+                    @foreach (App\Enums\SubscriptionStatus::cases() as $status)
                         <a href="{{ route('subscription.index') . '?st=' . $status->value }}"
                             class="pill {{ request('st') === $status->value ? '' : 'outlined' }}">
                             {{ $status->label() }}

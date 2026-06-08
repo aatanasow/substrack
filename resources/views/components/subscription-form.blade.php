@@ -16,7 +16,7 @@
                 </div>
                 <div class="flex-1">
                     <div class="space-y-2">
-                        <x-form.select label="Status" name="status" :options="App\SubscriptionStatus::options()" required :value="$subscription->status->value" />
+                        <x-form.select label="Status" name="status" :options="App\Enums\SubscriptionStatus::options()" required :value="$subscription->status->value" />
                         {{-- <div class="text-dark mb-2 block text-sm font-semibold">Status</div>
                                 @foreach (App\SubscriptionStatus::cases() as $status)
                                     <input class="hidden" id="{{ $status->value }}" type="radio" name="status"
@@ -40,7 +40,7 @@
                     <x-form.field label="Price" name="price" placeholder="Add price" required value="{{ $subscription->price ? round($subscription->price, 2) : '' }}" />
                 </div>
                 <div class="flex-1">
-                    <x-form.select label="Currency" name="currency" :options="App\SubscriptionCurrency::options()" required :value="$subscription->currency->value" />
+                    <x-form.select label="Currency" name="currency" :options="App\Enums\SubscriptionCurrency::options()" required :value="$subscription->currency->value" />
                 </div>
             </div>
 
@@ -57,7 +57,7 @@
                 </div>
 
                 <div class="flex-1">
-                    <x-form.select label="Frequency" name="frequency" :options="App\SubscriptionFrequency::options()" required
+                    <x-form.select label="Frequency" name="frequency" :options="App\Enums\SubscriptionFrequency::options()" required
                         :value="$subscription->frequency->value" />
 
                 </div>

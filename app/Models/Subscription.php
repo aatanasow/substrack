@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
-use App\SubscriptionCurrency;
-use App\SubscriptionFrequency;
-use App\SubscriptionStatus;
+use App\Enums\SubscriptionCurrency;
+use App\Enums\SubscriptionFrequency;
+use App\Enums\SubscriptionStatus;
 use Database\Factories\SubscriptionFactory;
+use Illuminate\Database\Eloquent\Attributes\Guarded;
+// use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 // use Illuminate\Support\Carbon;
@@ -13,6 +15,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Number;
 
+// #[Unguarded]
+#[Guarded([])]
 class Subscription extends Model
 {
     /** @use HasFactory<SubscriptionFactory> */
@@ -64,5 +68,4 @@ class Subscription extends Model
             ->put('all', $user->subscriptions()->count());
 
     }
-
 }

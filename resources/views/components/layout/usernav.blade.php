@@ -57,6 +57,6 @@
 </aside>
 
 <div id="sidebarBackdrop"
-    class="fixed inset-0 hidden bg-gray-900/40 transition z-30 duration-300 lg:bg-transparent dark:bg-neutral-900/40 dark:lg:bg-transparent">
+    class="fixed inset-0 hidden bg-gray-900/40 transition z-25 duration-300 lg:bg-transparent dark:bg-neutral-900/40 dark:lg:bg-transparent">
 </div>
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Enums;
 
 enum SubscriptionFrequency: string
 {
@@ -28,7 +28,7 @@ enum SubscriptionFrequency: string
     {
         return collect(SubscriptionFrequency::cases())
             ->mapWithKeys(fn ($option) => [
-                $option->value => $option->label()
+                $option->value => $option->label(),
             ])->toArray();
     }
 }
