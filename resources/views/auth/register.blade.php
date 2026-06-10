@@ -1,7 +1,7 @@
 <x-layout>
 
     <x-form title="Register an account" description="Start tracking your subscriptions">
-        <form action="/register" method="POST">
+        <form action="{{ route('register') }}" method="POST">
             @csrf
 
             <x-form.field label="Name" name="name" />
@@ -15,7 +15,7 @@
 
             <div class="flex items-center justify-center gap-2">
                 <p class="text-sm font-medium text-gray-500">Already have an Account?</p>
-                <a href="/login" class="text-sm font-medium text-blue-600 hover:text-blue-700">Sign In</a>
+                <a href="{{ route('login') }}" class="text-sm font-medium text-blue-600 hover:text-blue-700">Sign In</a>
             </div>
         </form>
     </x-form>

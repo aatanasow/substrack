@@ -2,7 +2,7 @@
     <nav class="flex flex-row items-center justify-between gap-3 h-15" aria-label="Global">
 
         <div class="flex items-center gap-6">
-            <a href="{{ route('landing') }}">
+            <a href="{{ route('home') }}">
                 <img src="/images/logos/logo-substrack.svg" alt class="max-w-36" aria-hidden="true">
             </a>
             <span class="hidden h-5 w-px border-e border-gray-400/50 sm:block"></span>
@@ -118,7 +118,7 @@
                                     <p class="text-dark text-sm">New Subscription</p>
                                 </a>
                                 <div class="mt-1.75 grid px-4">
-                                    <form action="/logout" method="POST">
+                                    <form action="{{ route('logout') }}" method="POST">
                                         @csrf
 
                                         <button

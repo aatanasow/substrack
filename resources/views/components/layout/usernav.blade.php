@@ -13,7 +13,7 @@
 
                     <li class="sidebar-item">
                         <a class="sidebar-link hover:text-primary hover:bg-primary/15 flex w-full items-center gap-3 rounded-md px-3 py-3"
-                            href="#">
+                            href="{{ route('dashboard') }}">
                             <i class="ti ti-layout-dashboard text-xl"></i>
                             <span>Dashboard</span>
                         </a>
