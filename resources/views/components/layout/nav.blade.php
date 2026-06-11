@@ -102,15 +102,15 @@
                         <div class="hs-dropdown-menu w-50 absolute right-0 z-20 hidden rounded-lg bg-white py-3 shadow-md transition-[opacity,margin] group-hover:block"
                             role="menu">
                             <div class="space-y-1">
-                                <a href="javascript:void(0)"
+                                <a href="{{ route('profile') }}"
                                     class="hover:bg-primary/10 flex items-center gap-2 px-4 py-2.5">
                                     <i class="ti ti-user text-xl text-gray-500"></i>
                                     <p class="text-dark text-sm">My Profile</p>
                                 </a>
                                 <a href="javascript:void(0)"
                                     class="hover:bg-primary/10 flex items-center gap-2 px-4 py-2.5">
-                                    <i class="ti ti-mail text-xl text-gray-500"></i>
-                                    <p class="text-dark text-sm">My Account</p>
+                                    <i class="ti ti-settings text-xl text-gray-500"></i>
+                                    <p class="text-dark text-sm">Account Settings</p>
                                 </a>
                                 <a href="{{ route('subscription.create') }}"
                                     class="hover:bg-primary/10 flex items-center gap-2 px-4 py-2.5">

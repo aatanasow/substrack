@@ -42,7 +42,7 @@
                             href="#">
                             <span class="flex items-center gap-3">
                                 <i class="ti ti-settings text-xl"></i>
-                                <span>Settings</span>
+                                <span>Account Settings</span>
                             </span>
                         </a>
                     </li>

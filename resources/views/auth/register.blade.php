@@ -4,10 +4,10 @@
         <form action="{{ route('register') }}" method="POST">
             @csrf
 
-            <x-form.field label="Name" name="name" />
-            <x-form.field label="Email Address" name="email" type="email" />
-            <x-form.field label="Password" name="password" type="password" />
-            <x-form.field label="Repeat Password" name="password_confirmation" type="password" />
+            <x-form.field label="Name" name="name" required />
+            <x-form.field label="Email Address" name="email" type="email" required />
+            <x-form.field label="Password" name="password" type="password" required />
+            <x-form.field label="Repeat Password" name="password_confirmation" type="password" required />
 
             <button type="submit" class="btn my-4 w-full py-2.5 text-base font-medium text-white hover:bg-blue-700">
                 Create Account

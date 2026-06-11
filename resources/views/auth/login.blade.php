@@ -11,8 +11,8 @@
         <form action="{{ route('login') }}" method="POST">
             @csrf
 
-            <x-form.field label="Email Address" name="email" type="email" />
-            <x-form.field label="Password" name="password" type="password" />
+            <x-form.field label="Email Address" name="email" type="email" required />
+            <x-form.field label="Password" name="password" type="password" required />
 
             <div class="flex justify-between">
                 <div class="flex">

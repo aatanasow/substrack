@@ -1,4 +1,4 @@
-@props(['label' => false, 'name', 'type' => 'text', 'value' => null])
+@props(['label' => false, 'name', 'type' => 'text', 'value' => null, 'errbag' => ''])
 
 <div class="mb-4">
     @if ($label)
@@ -15,5 +15,5 @@
             value="{{ old($name, $value) }}" {{ $attributes }}
             class="block w-full rounded-md border-gray-200 px-4 py-3 text-sm focus:border-blue-600 focus:ring-0">
     @endif
-    <x-form.error name="{{ $name }}" />
+    <x-form.error name="{{ $name }}" errbag="{{ $errbag }}" />
 </div>

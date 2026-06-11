@@ -12,7 +12,7 @@
         <form action="{{ route('password.email') }}" method="POST">
             @csrf
 
-            <x-form.field label="Email Address" name="email" type="email" />
+            <x-form.field label="Email Address" name="email" type="email" required />
 
             <button type="submit" class="btn my-4 w-full py-2.5 text-base font-medium text-white hover:bg-blue-700">
                 Send reset link

@@ -1,5 +1,12 @@
-@props(['name'])
+@props(['name', 'errbag' => ''])
 
-@error($name)
-    <p class="text-error text-sm">{{ $message }}</p>
-@enderror
+@if ($errbag)
+    @error($name, $errbag)
+        <p class="text-error text-sm">{{ $message }}</p>
+    @enderror
+@else
+    @error($name)
+        <p class="text-error text-sm">{{ $message }}</p>
+    @enderror
+@endif
+

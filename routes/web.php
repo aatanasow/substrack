@@ -10,6 +10,7 @@ Route::view('/contact', 'contact')->name('contact');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
+    Route::get('/profile', function () {return view('profile');})->name('profile');
 
     Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscription.index');
     Route::get('/subscriptions/create', [SubscriptionController::class, 'create'])->name('subscription.create');
@@ -21,9 +22,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
     Route::delete('/ideas/{subscription}/image', [SubscriptionImageController::class, 'destroy'])->name('subscription.image.destroy');
+    });
+
+Route::middleware(['guest'])->group(function () {
+    Route::get('/two-factor-challenge-recovery', function () {return view('auth.two-factor-challenge-recovery');})->name('auth.challenge-recovery');
 });
-
-// Route::middleware(['guest'])->group(function () {
-
-// });
 
