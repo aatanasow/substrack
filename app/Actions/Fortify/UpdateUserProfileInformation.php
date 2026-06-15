@@ -30,7 +30,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
                 'max:255',
                 Rule::unique('users')->ignore($user->id),
             ],
-        // ])->validate();
+            // ])->validate();
         ])->validateWithBag('updateProfileInformation');
 
         if ($input['email'] !== $user->email &&

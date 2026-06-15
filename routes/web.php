@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\SubscriptionImageController;
+use App\Http\Controllers\UserImageController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home')->name('home');
@@ -9,8 +11,10 @@ Route::view('/help', 'help')->name('help');
 Route::view('/contact', 'contact')->name('contact');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
-    Route::get('/profile', function () {return view('profile');})->name('profile');
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 
     Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscription.index');
     Route::get('/subscriptions/create', [SubscriptionController::class, 'create'])->name('subscription.create');
@@ -20,11 +24,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/subscriptions/{subscription}', [SubscriptionController::class, 'update'])->name('subscription.update');
     Route::delete('/subscriptions/{subscription}', [SubscriptionController::class, 'destroy'])->name('subscription.destroy');
 
+    Route::delete('/subscriptions/{subscription}/image', [SubscriptionImageController::class, 'destroy'])->name('subscription.image.destroy');
 
-    Route::delete('/ideas/{subscription}/image', [SubscriptionImageController::class, 'destroy'])->name('subscription.image.destroy');
-    });
+    Route::patch('/profile/image', [UserImageController::class, 'update'])->name('user.image.update');
+    Route::delete('/profile/image', [UserImageController::class, 'destroy'])->name('user.image.destroy');
 
-Route::middleware(['guest'])->group(function () {
-    Route::get('/two-factor-challenge-recovery', function () {return view('auth.two-factor-challenge-recovery');})->name('auth.challenge-recovery');
 });
 
+Route::middleware(['guest'])->group(function () {
+    Route::get('/two-factor-challenge-recovery', function () {
+        return view('auth.two-factor-challenge-recovery');
+    })->name('auth.challenge-recovery');
+});

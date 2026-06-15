@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\SubscriptionStatus;
 use App\Http\Requests\SubscriptionRequest;
 use App\Models\Subscription;
-use App\Enums\SubscriptionStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -62,8 +62,8 @@ class SubscriptionController extends Controller
 
         Auth::user()->subscriptions()->create($data);
         // DB::transaction(function () use ($request, $data) {
-            // Auth::user()->subscriptions()->create($request->validated());
-            // Auth::user()->subscriptions()->create($request->safe()->except('image_path'));
+        // Auth::user()->subscriptions()->create($request->validated());
+        // Auth::user()->subscriptions()->create($request->safe()->except('image_path'));
         // });
 
         return to_route('subscription.index')->with('success', 'Subscription created');

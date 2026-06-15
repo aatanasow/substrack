@@ -10,7 +10,7 @@
                 {{ $exception->getMessage() }}
             </p>
             <div class="mt-10 flex items-center justify-center gap-x-6">
-                <a href="{{ route('landing') }}" class="btn hover:bg-blue-700/80">
+                <a href="{{ route('home') }}" class="btn hover:bg-blue-700/80">
                     Go back home
                 </a>
                 <a href="{{ route('contact') }}" class="btn-outline-primary hover:bg-blue-700/80 hover:text-white">

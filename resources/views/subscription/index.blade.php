@@ -14,7 +14,7 @@
             <x-card>
                 {{-- <h1 class="mt-5 text-center text-3xl">Subscription list</h1> --}}
 
-                <div class="space-x-2 card-section">
+                <div class="card-section space-x-2">
 
                     <a href="{{ route('subscription.index') }}"
                         class="pill {{ request()->has('st') ? 'outlined' : '' }}">All
@@ -30,57 +30,65 @@
 
                 </div>
 
-                <x-table :captions="['Name', 'Frequency', 'Status', 'Price', ' ']">
+                {{-- @dd($subscriptions->isEmpty()); --}}
 
-                    @forelse ($subscriptions as $subscription)
-                        <x-table.row>
-                            <x-table.data>
-                                <div class="flex items-center gap-3">
-                                    @if ($subscription->image_path)
-                                        <img class="h-9 w-9 rounded-full object-cover" src="{{ asset('storage/' . $subscription->image_path) }}" alt
-                                            aria-hidden="true">
-                                    @else
-                                        <img class="h-9 w-9 rounded-full object-cover" src="/images/logos/no-image.png"
-                                            alt aria-hidden="true">
-                                    @endif
+                @if ($subscriptions->isEmpty())
+                    <p class="text-dark text-lg font-semibold">No subscriptions found</p>
+                @else
+                    <x-table :captions="['Name', 'Frequency', 'Status', 'Price', ' ']">
 
-                                    <div>
-                                        <h3 class="text-dark line-clamp-1 font-semibold">{{ $subscription->title }}</h3>
-                                        <span
-                                            class="text-xs font-normal text-gray-500">{{ $subscription->start_date->toFormattedDateString() }}</span>
+                        @foreach ($subscriptions as $subscription)
+                            <x-table.row>
+                                <x-table.data>
+                                    <div class="flex items-center gap-3">
+                                        @if ($subscription->image_path)
+                                            <img class="h-9 w-9 rounded-full object-cover"
+                                                src="{{ asset('storage/' . $subscription->image_path) }}" alt
+                                                aria-hidden="true">
+                                        @else
+                                            <img class="h-9 w-9 rounded-full object-cover"
+                                                src="/images/logos/no-image.png" alt aria-hidden="true">
+                                        @endif
+
+                                        <div>
+                                            <h3 class="text-dark line-clamp-1 font-semibold">{{ $subscription->title }}
+                                            </h3>
+                                            <span
+                                                class="text-xs font-normal text-gray-500">{{ $subscription->start_date->toFormattedDateString() }}</span>
+                                        </div>
                                     </div>
-                                </div>
-                            </x-table.data>
-                            <x-table.data>
-                                <span class="font-normal text-gray-500">{{ $subscription->frequency->label() }}</span>
-                            </x-table.data>
-                            <x-table.data>
-                                <x-status-label status="{{ $subscription->status }}">
-                                    {{ $subscription->status->label() }}
-                                </x-status-label>
-                            </x-table.data>
-                            <x-table.data class="w-25">
-                                <span
-                                    class="text-dark text-base font-semibold">{{ $subscription->formatPrice($subscription->price, $subscription->currency) }}
-                                </span>
-                            </x-table.data>
-                            <x-table.data class="text-right w-25">
-                                <div class="space-x-2">
-                                    <a href="{{ route('subscription.show', $subscription) }}">
-                                        <i class="ti ti-eye hover:text-primary text-xl"></i>
-                                    </a>
-                                    <a href="{{ route('subscription.edit', ['subscription' => $subscription->id]) }}">
-                                        <i class="ti ti-edit hover:text-primary text-xl"></i>
-                                    </a>
-                                </div>
-                            </x-table.data>
-                        </x-table.row>
+                                </x-table.data>
+                                <x-table.data>
+                                    <span
+                                        class="font-normal text-gray-500">{{ $subscription->frequency->label() }}</span>
+                                </x-table.data>
+                                <x-table.data>
+                                    <x-status-label status="{{ $subscription->status }}">
+                                        {{ $subscription->status->label() }}
+                                    </x-status-label>
+                                </x-table.data>
+                                <x-table.data class="w-25">
+                                    <span
+                                        class="text-dark text-base font-semibold">{{ $subscription->formatPrice($subscription->price, $subscription->currency) }}
+                                    </span>
+                                </x-table.data>
+                                <x-table.data class="w-25 text-right">
+                                    <div class="space-x-2">
+                                        <a href="{{ route('subscription.show', $subscription) }}">
+                                            <i class="ti ti-eye hover:text-primary text-xl"></i>
+                                        </a>
+                                        <a
+                                            href="{{ route('subscription.edit', ['subscription' => $subscription->id]) }}">
+                                            <i class="ti ti-edit hover:text-primary text-xl"></i>
+                                        </a>
+                                    </div>
+                                </x-table.data>
+                            </x-table.row>
+                        @endforeach
+                    </x-table>
 
+                @endif
 
-                    @empty
-                        <p class="text-dark text-lg font-semibold">No subscriptions found</p>
-                    @endforelse
-                </x-table>
             </x-card>
 
         </div>
