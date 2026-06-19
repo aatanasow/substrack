@@ -10,8 +10,9 @@ use Illuminate\Database\Eloquent\Attributes\Guarded;
 // use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Number;
 
@@ -27,6 +28,7 @@ class Subscription extends Model
         'status' => SubscriptionStatus::class,
         'frequency' => SubscriptionFrequency::class,
         'currency' => SubscriptionCurrency::class,
+        'price' => 'decimal:2',
     ];
 
     protected $attributes = [
@@ -40,10 +42,10 @@ class Subscription extends Model
         return $this->belongsTo(User::class);
     }
 
-    // public function formatDate(Carbon $value)
-    // {
-    //     return Carbon::parse($value)->format('Y-m-d');
-    // }
+    public function payments(): HasMany
+    {
+        return $this->hasMany(SubscriptionPayment::class);
+    }
 
     public static function formatPrice(float $price, SubscriptionCurrency $currency)
     {
@@ -69,46 +71,49 @@ class Subscription extends Model
 
     }
 
-    public function getNextPaymentDate(): Carbon
+    public function getNextPaymentDate(): Subscription
     {
         $start = Carbon::parse($this->start_date);
         $day = $start->day;
-        $today = Carbon::today();
 
         $next = $start->copy();
         $next->settings([
             'monthOverflow' => false,
         ]);
 
-        while ($next->lessThanOrEqualTo($today)) {
-            $next = match ($this->frequency->value) {
-                // move this to the enum
-                'monthly' => $next->addMonth(),
-                'quarterly' => $next->addMonths(3),
-                'annually' => $next->addYear(),
-                // default => throw new InvalidArgumentException('Invalid period'),
-            };
+        while ($next->lessThan(Carbon::today())) {
+            $next->addMonth($this->frequency->numOfMonths());
         }
         $next->day(min($day, $next->daysInMonth));
-        return $next;
+        $this->next_payment = $next;
+
+        return $this;
+    }
+
+    public function formattedForHumans(): string
+    {
+        $next = $this->next_payment;
+
+        return match (floor($next->diffInDays())) {
+            0.0 => 'Today',
+            // 1.0 => 'Yesterday',
+            -1.0 => 'Tomorrow',
+            default => $next->diffForHumans(),
+        };
     }
 
     public function getSubscriptionPeriods(): int
     {
-        $start = Carbon::parse($this->start_date);
-        $end = Carbon::now();
+        return $this->payments()->where('confirmed', 1)->count();
+    }
 
-        if($end->greaterThanOrEqualTo($start)){
-            return match ($this->frequency->value) {
-                // move this to the enum
-                'monthly' => $start->diffInMonths($end)+1,
-                'quarterly' => intdiv($start->diffInMonths($end), 3)+1,
-                'annually' => $start->diffInYears($end)+1,
-                // default => throw new InvalidArgumentException('Invalid subscription period'),
-            };
-        } else {
-            return 0;
-        }
+    public function getSubscriptionTotal(): string
+    {
+        return $this->payments()->where('confirmed', 1)->sum('price');
 
+        // $payments = $this->payments()->where('confirmed', 1)->get();
+        // return $payments->reduce(function($sum, $payment){
+        //     return $sum + $payment->price;
+        // });
     }
 }

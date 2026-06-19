@@ -19,13 +19,23 @@ enum SubscriptionFrequency: string
         };
     }
 
-    public function recurring():bool
+    public function recurring(): bool
     {
         return match ($this) {
             self::MONTHLY => true,
             self::QUARTERLY => true,
             self::ANNUALLY => true,
             self::ONETIME => false,
+        };
+    }
+
+    public function numOfMonths(): int
+    {
+        return match ($this) {
+            self::MONTHLY => 1,
+            self::QUARTERLY => 3,
+            self::ANNUALLY => 12,
+            self::ONETIME => 0,
         };
     }
 
@@ -41,5 +51,4 @@ enum SubscriptionFrequency: string
                 $option->value => $option->label(),
             ])->toArray();
     }
-
 }

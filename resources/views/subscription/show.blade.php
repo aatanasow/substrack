@@ -82,7 +82,7 @@
                     <div class="flex flex-1 flex-col space-y-1">
                         <div class="text-xs text-gray-500">Total Spent</div>
                         <div class="card-section flex-1">
-                            {{ $subscription->formatPrice($subscription->getSubscriptionPeriods() * $subscription->price, $subscription->currency) }}
+                            {{ $subscription->formatPrice($subscription->getSubscriptionTotal(), $subscription->currency) }}
                             <div class="text-xs text-gray-700">{{ $subscription->getSubscriptionPeriods() }} {{ $subscription->getSubscriptionPeriods()===1 ? 'payment' : 'payments' }} </div>
                         </div>
                     </div>
@@ -103,9 +103,11 @@
                         <div class="flex flex-1 flex-col space-y-1">
                             <div class="text-xs text-gray-500">Next payment</div>
                             <div class="card-section flex-1">
-                                {{ $subscription->getNextPaymentDate()->toFormattedDateString() }}
+                                {{ $subscription->getNextPaymentDate()->next_payment->toFormattedDateString() }}
+                                {{-- {{ $subscription->getNextPaymentDate()->toFormattedDateString() }} --}}
                                 <div class="text-xs text-gray-700">
-                                    {{ $subscription->getNextPaymentDate()->diffForHumans() }}
+                                    {{ $subscription->getNextPaymentDate()->formattedForHumans() }}
+                                    {{-- {{ $subscription->getNextPaymentDate()->diffForHumans() }} --}}
                                 </div>
                             </div>
                         </div>

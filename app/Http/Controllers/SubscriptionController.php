@@ -60,11 +60,16 @@ class SubscriptionController extends Controller
             $data['image_path'] = $request->image_path->store('subscriptions', 'public');
         }
 
-        Auth::user()->subscriptions()->create($data);
-        // DB::transaction(function () use ($request, $data) {
-        // Auth::user()->subscriptions()->create($request->validated());
-        // Auth::user()->subscriptions()->create($request->safe()->except('image_path'));
-        // });
+        DB::transaction(function () use ($data) {
+            $subscription = Auth::user()->subscriptions()->create($data);
+
+            // add the first payment - need more detailed logic and confirmation from user
+            $subscription->payments()->create([
+                'payment_date' => today(),
+                'price' => $data['price'],
+                'confirmed' => true,
+            ]);
+        });
 
         return to_route('subscription.index')->with('success', 'Subscription created');
     }
