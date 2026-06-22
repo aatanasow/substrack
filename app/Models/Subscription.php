@@ -71,7 +71,7 @@ class Subscription extends Model
 
     }
 
-    public function getNextPaymentDate(): Subscription
+    public function getNextPaymentDate(): Carbon
     {
         $start = Carbon::parse($this->start_date);
         $day = $start->day;
@@ -84,22 +84,7 @@ class Subscription extends Model
         while ($next->lessThan(Carbon::today())) {
             $next->addMonth($this->frequency->numOfMonths());
         }
-        $next->day(min($day, $next->daysInMonth));
-        $this->next_payment = $next;
-
-        return $this;
-    }
-
-    public function formattedForHumans(): string
-    {
-        $next = $this->next_payment;
-
-        return match (floor($next->diffInDays())) {
-            0.0 => 'Today',
-            // 1.0 => 'Yesterday',
-            -1.0 => 'Tomorrow',
-            default => $next->diffForHumans(),
-        };
+        return $next->day(min($day, $next->daysInMonth));
     }
 
     public function getSubscriptionPeriods(): int

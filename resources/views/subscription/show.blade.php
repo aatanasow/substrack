@@ -103,11 +103,9 @@
                         <div class="flex flex-1 flex-col space-y-1">
                             <div class="text-xs text-gray-500">Next payment</div>
                             <div class="card-section flex-1">
-                                {{ $subscription->getNextPaymentDate()->next_payment->toFormattedDateString() }}
-                                {{-- {{ $subscription->getNextPaymentDate()->toFormattedDateString() }} --}}
+                                {{ $subscription->getNextPaymentDate()->toFormattedDateString() }}
                                 <div class="text-xs text-gray-700">
                                     {{ $subscription->getNextPaymentDate()->formattedForHumans() }}
-                                    {{-- {{ $subscription->getNextPaymentDate()->diffForHumans() }} --}}
                                 </div>
                             </div>
                         </div>
