@@ -54,40 +54,68 @@
                         <div class="group relative inline-block">
                             <a class="hs-dropdown-toggle icon-hover relative my-5 inline-flex text-white" href="#">
                                 <i class="ti ti-bell-ringing z-1 relative text-xl"></i>
-                                <div
-                                    class="bg-secondary absolute -right-1.5 -top-px inline-flex h-2 w-2 items-center justify-center rounded-full text-[11px] font-medium text-white">
-                                </div>
+                                @if (auth()->user()->unreadNotifications()->exists())
+                                    <div
+                                        class="bg-secondary absolute -right-1.5 -top-px inline-flex h-2 w-2 items-center justify-center rounded-full text-[11px] font-medium text-white">
+                                    </div>
+                                @endif
                             </a>
 
                             <div
                                 class="hs-dropdown-menu w-75 absolute right-0 hidden min-w-max rounded-md opacity-0 transition-[opacity,margin] group-hover:block group-hover:opacity-100">
                                 <div>
-                                    <h3 class="text-dark px-6 py-3 text-base font-semibold">Notification
-                                    </h3>
-                                    <ul class="flex list-none flex-col">
-                                        <li>
-                                            <a href="#" class="hover:bg-primary/15 block px-6 py-3">
-                                                <p class="text-dark text-sm font-semibold">Notification 1
-                                                </p>
-                                                <p class="text-xs font-medium text-gray-500">Description</p>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#" class="hover:bg-primary/15 block px-6 py-3">
-                                                <p class="text-dark text-sm font-semibold">Notification 2
-                                                </p>
-                                                <p class="text-xs font-medium text-gray-500">Description</p>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#" class="hover:bg-primary/15 block px-6 py-3">
-                                                <p class="text-dark text-sm font-semibold">Notification 3
-                                                </p>
-                                                <p class="text-xs font-medium text-gray-500">Description</p>
-                                            </a>
-                                        </li>
-                                    </ul>
+                                    <div class="flex items-center justify-between rounded-t-md bg-gray-50 px-4 py-4">
+                                        <h3 class="text-dark text-base font-semibold">
+                                            Notifications
+                                            <span
+                                                class="text-xs text-gray-500">({{ auth()->user()->unreadNotifications()->count() }})</span>
 
+                                        </h3>
+                                        @if (auth()->user()->unreadNotifications()->exists())
+                                        <form action="{{ route('notification.destroy') }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button type="submit" class="btn-empty hover:bg-blue-700/80 hover:text-white">
+                                                Mark all as read
+                                            </button>
+                                        </form>
+                                        @endif
+
+                                    </div>
+
+
+                                    <ul class="mb-3 flex list-none flex-col">
+                                        @if (!auth()->user()->unreadNotifications()->exists())
+                                            <li>
+                                                <p class="text-dark px-4 py-6 text-sm font-semibold text-center">
+                                                    No notifications found
+                                                </p>
+                                            </li>
+                                        @else
+                                            @foreach (auth()->user()->unreadNotifications as $notification)
+                                                <li
+                                                    class="hover:bg-primary/10 flex max-w-80 items-start justify-between gap-3 px-4 py-2">
+                                                    <a href="{{ route('subscription.show', $notification->data['subscription_id']) }}"
+                                                        class="block">
+                                                        <p class="text-dark text-sm font-semibold">
+                                                            {{ $notification->data['title'] }}</p>
+                                                        <p class="text-xs font-medium text-gray-500">
+                                                            {{ $notification->data['message'] }}</p>
+                                                    </a>
+                                                    <form action="{{ route('notification.update', $notification) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('PATCH')
+
+                                                        <button type="submit" class="cursor-pointer hover:text-red-700/80">
+                                                            <i class="ti ti-x text-xl"></i>
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            @endforeach
+                                        @endif
+                                    </ul>
                                 </div>
                             </div>
 
@@ -99,14 +127,11 @@
                             <button class="relative my-4 inline-flex">
                                 @if (auth()->user()->image_path)
                                     <img src="{{ asset('storage/' . auth()->user()->image_path) }}"
-                                        class="h-7 w-7 rounded-full object-cover"
-                                        alt="{{ auth()->user()->name }}"
+                                        class="h-7 w-7 rounded-full object-cover" alt="{{ auth()->user()->name }}"
                                         aria-hidden="true">
                                 @else
-                                    <img src="/images/profile/user.png"
-                                        class="h-7 w-7 rounded-full object-cover"
-                                        alt="{{ auth()->user()->name }}"
-                                        aria-hidden="true">
+                                    <img src="/images/profile/user.png" class="h-7 w-7 rounded-full object-cover"
+                                        alt="{{ auth()->user()->name }}" aria-hidden="true">
                                 @endif
                             </button>
 

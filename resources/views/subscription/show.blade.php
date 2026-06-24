@@ -25,6 +25,10 @@
             </div>
         </div>
 
+        @if ($subscription->payments()->where('confirmed', 0)->exists())
+
+            Subscription renewal from {{ $subscription->payments()->where('confirmed', 0)->latest()->first()->payment_date->toFormattedDateString() }} is not confirmed! Please Confirm or delete.
+        @endif
 
         <x-card class="lg:max-w-2/3 mx-auto w-full">
             <h1 class="mt-5 text-center text-2xl">
@@ -83,7 +87,7 @@
                         <div class="text-xs text-gray-500">Total Spent</div>
                         <div class="card-section flex-1">
                             {{ $subscription->formatPrice($subscription->getSubscriptionTotal(), $subscription->currency) }}
-                            <div class="text-xs text-gray-700">{{ $subscription->getSubscriptionPeriods() }} {{ $subscription->getSubscriptionPeriods()===1 ? 'payment' : 'payments' }} </div>
+                            <div class="text-xs text-gray-700">{{ $subscription->getSubscriptionsCount() }} {{ $subscription->getSubscriptionsCount()===1 ? 'payment' : 'payments' }} </div>
                         </div>
                     </div>
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\SubscriptionStatus;
 use App\Http\Requests\SubscriptionRequest;
 use App\Models\Subscription;
+use App\Notifications\SubscriptionCreated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -69,6 +70,9 @@ class SubscriptionController extends Controller
                 'price' => $data['price'],
                 'confirmed' => true,
             ]);
+
+            // notify the user
+            Auth::user()->notify(new SubscriptionCreated($subscription));
         });
 
         return to_route('subscription.index')->with('success', 'Subscription created');

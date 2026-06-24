@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\SubscriptionImageController;
@@ -29,6 +30,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile/image', [UserImageController::class, 'update'])->name('user.image.update');
     Route::delete('/profile/image', [UserImageController::class, 'destroy'])->name('user.image.destroy');
 
+    Route::patch('/notification/{notification}/mark', [NotificationController::class, 'update'])->name('notification.update');
+    Route::delete('/notifications/mark', [NotificationController::class, 'destroy'])->name('notification.destroy');
+
 });
 
 Route::middleware(['guest'])->group(function () {
@@ -36,3 +40,9 @@ Route::middleware(['guest'])->group(function () {
         return view('auth.two-factor-challenge-recovery');
     })->name('auth.challenge-recovery');
 });
+
+if (app()->environment('production')) {
+    Route::fallback(function () {
+        abort(404);
+    });
+}

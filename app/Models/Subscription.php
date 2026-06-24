@@ -84,10 +84,11 @@ class Subscription extends Model
         while ($next->lessThan(Carbon::today())) {
             $next->addMonth($this->frequency->numOfMonths());
         }
+
         return $next->day(min($day, $next->daysInMonth));
     }
 
-    public function getSubscriptionPeriods(): int
+    public function getSubscriptionsCount(): int
     {
         return $this->payments()->where('confirmed', 1)->count();
     }
