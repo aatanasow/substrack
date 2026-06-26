@@ -1,7 +1,6 @@
 <x-layout>
     <div class="container flex flex-col items-center gap-6 py-5">
 
-
         <div class="flex w-full items-center justify-between">
             <a href="{{ route('subscription.index') }}" class="btn-empty hover:bg-blue-700/80 hover:text-white">
                 <i class="ti ti-arrow-back text-base"></i>
@@ -26,8 +25,23 @@
         </div>
 
         @if ($subscription->payments()->where('confirmed', 0)->exists())
+            <x-alert type="warning">
+                <p>
+                    Subscription renewal from
+                    {{ $subscription->payments()->where('confirmed', 0)->latest()->first()->payment_date->toFormattedDateString() }}
+                    is not confirmed!
+                </p>
+                <form
+                    action="{{ route('transaction.confirm', $subscription->payments()->where('confirmed', 0)->latest()->first()) }}"
+                    method="POST" class="inline">
+                    @csrf
+                    @method('PUT')
 
-            Subscription renewal from {{ $subscription->payments()->where('confirmed', 0)->latest()->first()->payment_date->toFormattedDateString() }} is not confirmed! Please Confirm or delete.
+                    <button title="Confirm" class="btn-empty hover:bg-blue-700/80 hover:text-white">
+                        Confirm now
+                    </button>
+                </form>
+            </x-alert>
         @endif
 
         <x-card class="lg:max-w-2/3 mx-auto w-full">
@@ -53,9 +67,9 @@
 
                     <div class="flex items-center gap-3">
                         @if ($subscription->link)
-                            <div class="text-blue-500 text-sm font-bold">
+                            <div class="text-sm font-bold text-blue-500">
                                 <a href="{{ $subscription->link }}" target="_blank">
-                                   Visit <i class="ti ti-external-link text-xl"></i>
+                                    Visit <i class="ti ti-external-link text-xl"></i>
                                 </a>
                             </div>
                         @endif
@@ -87,7 +101,8 @@
                         <div class="text-xs text-gray-500">Total Spent</div>
                         <div class="card-section flex-1">
                             {{ $subscription->formatPrice($subscription->getSubscriptionTotal(), $subscription->currency) }}
-                            <div class="text-xs text-gray-700">{{ $subscription->getSubscriptionsCount() }} {{ $subscription->getSubscriptionsCount()===1 ? 'payment' : 'payments' }} </div>
+                            <div class="text-xs text-gray-700">{{ $subscription->getSubscriptionsCount() }}
+                                {{ $subscription->getSubscriptionsCount() === 1 ? 'payment' : 'payments' }} </div>
                         </div>
                     </div>
 
@@ -121,7 +136,7 @@
                             <div class="card-section flex-1">
                                 {{ $subscription->notify }}
                                 <div class="text-xs text-gray-700">
-                                    {{ $subscription->notify ===1 ? 'day' : 'days' }} before
+                                    {{ $subscription->notify === 1 ? 'day' : 'days' }} before
                                 </div>
                             </div>
                         </div>

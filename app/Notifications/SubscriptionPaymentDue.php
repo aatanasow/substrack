@@ -38,7 +38,7 @@ class SubscriptionPaymentDue extends Notification
 
         return (new MailMessage)
             ->greeting('Hello')
-            ->line("Your subscription payment of {$this->subscription->price} for {$this->subscription->title} is due today.")
+            ->line("Your subscription payment of {$this->subscription->price} {$this->subscription->currency->label()} for {$this->subscription->title} is due today.")
             ->line('Please confirm payment is made.')
             ->action('Confirm payment', $url)
             ->line('Thank you for using our application!');
@@ -53,7 +53,7 @@ class SubscriptionPaymentDue extends Notification
     {
         return [
             'title' => 'Payment due today',
-            'message' => "Your subscription payment of {$this->subscription->price} is due today.",
+            'message' => "Your subscription payment of {$this->subscription->price} {$this->subscription->currency->label()} is due today.",
             'subscription_id' => $this->subscription->id,
         ];
     }

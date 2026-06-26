@@ -4,6 +4,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\SubscriptionImageController;
+use App\Http\Controllers\SubscriptionPaymentController;
 use App\Http\Controllers\UserImageController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +33,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::patch('/notification/{notification}/mark', [NotificationController::class, 'update'])->name('notification.update');
     Route::delete('/notifications/mark', [NotificationController::class, 'destroy'])->name('notification.destroy');
+
+    Route::get('/transactions', [SubscriptionPaymentController::class, 'index'])->name('transaction.index');
+    Route::get('/transactions/create', [SubscriptionPaymentController::class, 'create'])->name('transaction.create');
+    Route::post('/transactions', [SubscriptionPaymentController::class, 'store'])->name('transaction.store');
+    Route::get('/transactions/{transaction}/edit', [SubscriptionPaymentController::class, 'edit'])->name('transaction.edit');
+    Route::put('/transactions/{transaction}', [SubscriptionPaymentController::class, 'confirm'])->name('transaction.confirm');
+    Route::patch('/transactions/{transaction}', [SubscriptionPaymentController::class, 'update'])->name('transaction.update');
+    Route::delete('/transactions/{transaction}', [SubscriptionPaymentController::class, 'destroy'])->name('transaction.destroy');
 
 });
 

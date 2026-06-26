@@ -65,11 +65,14 @@ class SubscriptionController extends Controller
             $subscription = Auth::user()->subscriptions()->create($data);
 
             // add the first payment - need more detailed logic and confirmation from user
-            $subscription->payments()->create([
-                'payment_date' => today(),
-                'price' => $data['price'],
-                'confirmed' => true,
-            ]);
+            if($subscription->start_date->isBefore(today())){
+                $subscription->payments()->create([
+                    'payment_date' => $subscription->start_date,
+                    'price' => $data['price'],
+                    'confirmed' => false,
+                ]);
+            }
+
 
             // notify the user
             Auth::user()->notify(new SubscriptionCreated($subscription));
@@ -137,8 +140,10 @@ class SubscriptionController extends Controller
             Storage::disk('public')->delete($subscription->image_path);
         }
 
+        Auth::user()->notifications()->where('data->subscription_id', $subscription->id)->delete();
+
         $subscription->delete();
 
-        return to_route('subscription.index');
+        return to_route('subscription.index')->with('success', 'Subscription deleted');
     }
 }

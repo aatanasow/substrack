@@ -40,29 +40,32 @@
                         @foreach ($subscriptions as $subscription)
                             <x-table.row>
                                 <x-table.data>
-                                    <div class="flex items-center gap-3">
-                                        @if ($subscription->image_path)
-                                            <img class="h-9 w-9 rounded-full object-cover"
-                                                src="{{ asset('storage/' . $subscription->image_path) }}" alt
-                                                aria-hidden="true">
-                                        @else
-                                            <img class="h-9 w-9 rounded-full object-cover"
-                                                src="/images/logos/no-image.png" alt aria-hidden="true">
-                                        @endif
+                                    <a href="{{ route('subscription.show', $subscription) }}">
+                                        <div class="flex items-center gap-3">
+                                            @if ($subscription->image_path)
+                                                <img class="h-9 w-9 rounded-full object-cover"
+                                                    src="{{ asset('storage/' . $subscription->image_path) }}" alt
+                                                    aria-hidden="true">
+                                            @else
+                                                <img class="h-9 w-9 rounded-full object-cover"
+                                                    src="/images/logos/no-image.png" alt aria-hidden="true">
+                                            @endif
 
-                                        <div>
-                                            <h3 class="text-dark line-clamp-1 font-semibold">{{ $subscription->title }}
-                                            </h3>
-                                            <span
-                                                class="text-xs font-normal text-gray-500">{{ $subscription->start_date->toFormattedDateString() }}</span>
+                                            <div>
+                                                <h3 class="text-dark line-clamp-1 font-semibold">
+                                                    {{ $subscription->title }}
+                                                </h3>
+                                                <span
+                                                    class="text-xs font-normal text-gray-500">{{ $subscription->start_date->toFormattedDateString() }}</span>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </a>
                                 </x-table.data>
-                                <x-table.data>
+                                <x-table.data class="w-25">
                                     <span
                                         class="font-normal text-gray-500">{{ $subscription->frequency->label() }}</span>
                                 </x-table.data>
-                                <x-table.data>
+                                <x-table.data class="w-25">
                                     <x-status-label status="{{ $subscription->status }}">
                                         {{ $subscription->status->label() }}
                                     </x-status-label>
@@ -81,6 +84,15 @@
                                             href="{{ route('subscription.edit', ['subscription' => $subscription->id]) }}">
                                             <i class="ti ti-edit hover:text-primary text-xl"></i>
                                         </a>
+                                        <form action="{{ route('subscription.destroy', $subscription) }}"
+                                            method="POST" class="inline">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button title="Delete" class="cursor-pointer">
+                                                <i class="ti ti-x text-xl hover:text-red-700"></i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </x-table.data>
                             </x-table.row>

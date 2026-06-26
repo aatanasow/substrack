@@ -16,6 +16,7 @@ class SubscriptionImageController extends Controller
 
         $subscription->update(['image_path' => null]);
 
-        return back();
+        return redirect()->back()->with('success', 'Image deleted');
+
     }
 }
