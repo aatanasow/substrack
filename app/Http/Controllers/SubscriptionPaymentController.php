@@ -38,7 +38,7 @@ class SubscriptionPaymentController extends Controller
                 $option->id => $option->title,
             ])->toArray();
 
-        return view('transaction.create',[
+        return view('transaction.create', [
             'subsList' => $subsList,
         ]);
     }
@@ -54,7 +54,7 @@ class SubscriptionPaymentController extends Controller
         ]);
         // dd($validated['subscription_id']);
 
-        $subscription = Auth::user()->subscriptions()->where('id',$validated['subscription_id'])->first();
+        $subscription = Auth::user()->subscriptions()->where('id', $validated['subscription_id'])->first();
         // dd($subscription);
 
         $subscription->payments()->firstOrCreate(
@@ -89,7 +89,7 @@ class SubscriptionPaymentController extends Controller
         $transaction->update([
             'payment_date' => $validated['payment_date'],
             'price' => $validated['price'],
-            'confirmed' => true
+            'confirmed' => true,
         ]);
 
         return to_route('transaction.index')->with('success', 'Transaction created');
@@ -113,5 +113,4 @@ class SubscriptionPaymentController extends Controller
 
         return to_route('transaction.index')->with('success', 'Transaction deleted');
     }
-
 }

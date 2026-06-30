@@ -65,14 +65,13 @@ class SubscriptionController extends Controller
             $subscription = Auth::user()->subscriptions()->create($data);
 
             // add the first payment - need more detailed logic and confirmation from user
-            if($subscription->start_date->isBefore(today())){
+            if ($subscription->start_date->isBefore(today())) {
                 $subscription->payments()->create([
                     'payment_date' => $subscription->start_date,
                     'price' => $data['price'],
                     'confirmed' => false,
                 ]);
             }
-
 
             // notify the user
             Auth::user()->notify(new SubscriptionCreated($subscription));
