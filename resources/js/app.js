@@ -1,3 +1,8 @@
+
+import { Calendar } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+
 document.addEventListener("DOMContentLoaded", () => {
 
     const btn = document.querySelector("#headerCollapse");
@@ -24,6 +29,28 @@ document.addEventListener("DOMContentLoaded", () => {
         search.addEventListener("click", () => {
             searchbar.classList.toggle("hidden");
         });
+    }
+
+    //calendar
+    const calendar_el = document.getElementById('calendar');
+
+    if(calendar_el){
+        const calendar = new Calendar(
+            calendar_el,
+            {
+                plugins: [dayGridPlugin, interactionPlugin],
+                initialView: 'dayGridMonth',
+                events: '/calendar/events',
+                eventClick(info) {
+                    // alert('/subscriptions/'+info.event.extendedProps.id);
+                    window.open('/subscriptions/' + info.event.extendedProps.id, '_self');
+                    // window.location.href = ('/subscriptions/' + info.event.extendedProps.id);
+                }
+                // height: '100%',
+            }
+        );
+
+        calendar.render();
     }
 
 

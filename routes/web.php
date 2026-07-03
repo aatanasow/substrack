@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
@@ -15,10 +16,12 @@ Route::get('/contact', [ContactUsController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactUsController::class, 'send'])->name('contact.send');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
+
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+
+    Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar');
+    Route::get('/calendar/events', [CalendarController::class, 'events']);
 
     Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscription.index');
     Route::get('/subscriptions/create', [SubscriptionController::class, 'create'])->name('subscription.create');

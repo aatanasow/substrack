@@ -28,7 +28,7 @@
         'Segoe UI Symbol', 'Noto Color Emoji'; */
 
 
-    --color-red-500: oklch(63.7% 0.237 25.331);
+    /* --color-red-500: oklch(63.7% 0.237 25.331);
     --color-yellow-500: oklch(79.5% 0.184 86.047);
     --color-yellow-600: oklch(68.1% 0.162 75.834);
     --color-teal-500: oklch(70.4% 0.14 182.503);
@@ -43,7 +43,7 @@
     --color-gray-500: oklch(55.1% 0.027 264.364);
     --color-gray-600: oklch(44.6% 0.03 256.802);
     --color-gray-700: oklch(37.3% 0.034 259.733);
-    --color-white: #fff;
+    --color-white: #fff; */
     --spacing: 0.25rem;
     --container-md: 28rem;
     --text-xs: 0.75rem;
@@ -95,3 +95,4 @@
 @import 'base.css' layer(base);
 @import 'utilities.css' layer(utilities);
 @import 'layout.css';
+@import 'calendar.css';
