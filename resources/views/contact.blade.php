@@ -11,8 +11,8 @@
                                 Let's Talk
                             </h1>
                             <p class="text-base leading-relaxed text-slate-600">
-                                Have some big idea or brand to develop and need help? Then reach out we'd love to hear
-                                about your project and provide help.
+                                Have some big idea or want to see a feature in our app? Then reach out we'd love to hear
+                                about your suggestions and provide help.
                             </p>
                         </div>
 
