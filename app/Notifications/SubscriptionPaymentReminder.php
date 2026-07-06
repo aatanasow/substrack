@@ -34,10 +34,12 @@ class SubscriptionPaymentReminder extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
+        $url = url('/subscriptions/'.$this->subscription->id);
+
         return (new MailMessage)
             ->greeting('Hello')
             ->line("Your subscription payment for {$this->subscription->title} is due in {$this->subscription->notify} days.")
-            ->action('View it', url('/'))
+            ->action('View it', $url)
             ->line('Thank you for using our application!');
     }
 

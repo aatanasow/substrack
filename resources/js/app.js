@@ -1,10 +1,8 @@
-
-import { Calendar } from '@fullcalendar/core';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
+import { Calendar } from "@fullcalendar/core";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
 
 document.addEventListener("DOMContentLoaded", () => {
-
     const btn = document.querySelector("#headerCollapse");
     const sidebar = document.querySelector("#applicationSidebar");
     const backdrop = document.querySelector("#sidebarBackdrop");
@@ -32,27 +30,31 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     //calendar
-    const calendar_el = document.getElementById('calendar');
+    const calendarEl = document.getElementById("calendar");
 
-    if(calendar_el){
-        const calendar = new Calendar(
-            calendar_el,
-            {
-                plugins: [dayGridPlugin, interactionPlugin],
-                initialView: 'dayGridMonth',
-                events: '/calendar/events',
-                eventClick(info) {
-                    // alert('/subscriptions/'+info.event.extendedProps.id);
-                    window.open('/subscriptions/' + info.event.extendedProps.id, '_self');
-                    // window.location.href = ('/subscriptions/' + info.event.extendedProps.id);
-                }
-                // height: '100%',
-            }
-        );
+    if (calendarEl) {
+        const calendar = new Calendar(calendarEl, {
+            plugins: [dayGridPlugin, interactionPlugin],
+            initialView: "dayGridMonth",
+            events: {
+                url: "/calendar/events",
+                method: "GET",
+            },
+            eventClick(info) {
+                // alert('/subscriptions/'+info.event.extendedProps.id);
+                window.open(
+                    "/subscriptions/" + info.event.extendedProps.id,
+                    "_self",
+                );
+            },
+            // showNonCurrentDates: false, // Hides dates from the previous and next months
+            // lazyFetching: false, // Forces a new fetch every time the visible view changes
+
+            // height: '100%',
+        });
 
         calendar.render();
     }
-
 
     // // Get all tabs and tab panels
     // const tabs = document.querySelectorAll('[role="tab"]');

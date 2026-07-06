@@ -16,7 +16,9 @@ Route::get('/contact', [ContactUsController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactUsController::class, 'send'])->name('contact.send');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
 
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 

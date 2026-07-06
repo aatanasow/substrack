@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class CalendarController extends Controller
@@ -11,37 +13,40 @@ class CalendarController extends Controller
         return view('calendar.index');
     }
 
-    public function events()
+    public function events(Request $request)
     {
         $user = Auth::user();
+
+        $start = Carbon::parse($request->start);
+        $end = Carbon::parse($request->end);
+
+        $payments = $user
+            ->payments()
+            ->whereBetween('payment_date', [
+                $start->toDateString(),
+                $end->toDateString(),
+            ])
+            ->with('subscription')
+            ->get();
 
         $events = [];
 
         // Past payments
+        foreach ($payments as $payment) {
 
-        foreach ($user->subscriptions as $subscription) {
-
-            foreach ($subscription->payments as $payment) {
-
-                if ($payment->confirmed) {
-
-                }
-
-                $events[] = [
-                    'title' => $subscription->title.' payment',
-                    'start' => $payment->payment_date->toDateString(),
-                    'color' => $payment->confirmed ? '#4CAF50' : '#AAAAAA',
-                    'extendedProps' => [
-                        'price' => $payment->price,
-                        'id' => $subscription->id,
-                        'type' => 'payment',
-                    ],
-                ];
-            }
+            $events[] = [
+                'title' => $payment->subscription->title.' payment',
+                'start' => $payment->payment_date->toDateString(),
+                'color' => $payment->confirmed ? '#4CAF50' : '#AAAAAA',
+                'extendedProps' => [
+                    'price' => $payment->price,
+                    'id' => $payment->subscription->id,
+                    'type' => 'payment',
+                ],
+            ];
         }
 
         // Future renewals
-
         foreach ($user->subscriptions as $subscription) {
 
             if ($subscription->status->value !== 'active') {
