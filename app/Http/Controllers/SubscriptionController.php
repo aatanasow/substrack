@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\SubscriptionFrequency;
 use App\Enums\SubscriptionStatus;
+use App\Http\Filters\SubscriptionFilter;
 use App\Http\Requests\SubscriptionRequest;
 use App\Models\Subscription;
 use App\Notifications\SubscriptionCreated;
@@ -11,27 +13,37 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class SubscriptionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request, SubscriptionFilter $filter)
     {
         $user = Auth::user();
-        $status = $request->st;
 
-        // validate the query /simple/
-        if (! in_array($status, SubscriptionStatus::values())) {
-            $status = null;
-        }
+        $validated = $request->validate([
+            'status' => ['nullable', Rule::enum(SubscriptionStatus::class)],
+            'frequency' => ['nullable', Rule::enum(SubscriptionFrequency::class)],
+            'min_price' => ['nullable', 'numeric'],
+            'max_price' => ['nullable', 'numeric'],
+            'sort' => ['nullable', 'in:frequency,status,price,id,start_date'],
+            'direction' => ['nullable', 'in:asc,desc'],
+        ]);
 
-        $subscriptions = $user
-            ->subscriptions()
-            ->when($status, fn ($query, $status) => $query->where('status', $status))
-            ->latest()
-            ->get();
+        // $status = $request->st;
+        // // validate the query /simple/
+        // if (! in_array($status, SubscriptionStatus::values())) {
+        //     $status = null;
+        // }
+
+        $subscriptions = $filter
+            ->apply($user->subscriptions(), $validated)
+            // ->when($status, fn ($query, $status) => $query->where('status', $status))
+            ->paginate(5)
+            ->withQueryString();
 
         return view('subscription.index', [
             'subscriptions' => $subscriptions,

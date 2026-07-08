@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\SubscriptionCurrency;
+use App\Enums\SubscriptionFrequency;
 use App\Enums\SubscriptionStatus;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -29,9 +31,9 @@ class SubscriptionRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'start_date' => ['required', 'date'],
             'price' => ['required', 'decimal:0,2'],
-            'currency' => ['required'],
+            'currency' => ['required', Rule::enum(SubscriptionCurrency::class)],
             'status' => ['required', Rule::enum(SubscriptionStatus::class)],
-            'frequency' => ['required', 'string'],
+            'frequency' => ['required', Rule::enum(SubscriptionFrequency::class)],
             'notify' => ['nullable', 'integer'],
             'image_path' => ['nullable', 'image', 'max:5012'],
             'link' => ['nullable', 'url', 'max:255'],

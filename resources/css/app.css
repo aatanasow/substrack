@@ -6,6 +6,9 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
+/* override the 'prefers-color-scheme' media query */
+@custom-variant dark (&:where(.dark, .dark *));
+
 
 /*Self-hosted variable fonts (TTF)*/
 @font-face {

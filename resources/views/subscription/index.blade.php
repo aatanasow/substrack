@@ -15,8 +15,48 @@
                 {{-- <h1 class="mt-5 text-center text-3xl">Subscription list</h1> --}}
 
                 <div class="card-section space-x-2">
+                    <div class="w-full px-4 py-2 md:px-6" role="region" aria-labelledby="filter-heading">
 
-                    <a href="{{ route('subscription.index') }}"
+                        <div class="mb-6 flex items-center border-b border-slate-300 pb-2">
+                            <h2 id="filter-heading" class="text-lg font-semibold text-slate-900">Filter</h2>
+                            <a href="{{ route('subscription.index') }}" type="button"
+                                class="ml-auto cursor-pointer rounded text-sm font-semibold text-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                                aria-label="Clear all filters"><i class="ti ti-x text-md"></i> Clear all</a>
+                        </div>
+
+                        <form method="get">
+                            <div class="flex gap-6">
+                                <div class="flex-1">
+                                    <x-form.select label="Frequency" name="frequency" :options="['' => 'All frequencies', ...App\Enums\SubscriptionFrequency::options()]"
+                                        value="{{ request('frequency') }}" />
+                                </div>
+
+                                <div class="flex-1">
+                                    <x-form.select label="Status" name="status" :options="['' => 'All statuses', ...App\Enums\SubscriptionStatus::options()]"
+                                        value="{{ request('status') }}" />
+                                </div>
+
+                                <div class="flex-1">
+                                    <x-form.field label="Min Price" name="min_price"
+                                        value="{{ request('min_price') }}" />
+                                </div>
+
+                                <div class="flex-1">
+                                    <x-form.field label="Max Price" name="max_price"
+                                        value="{{ request('max_price') }}" />
+                                </div>
+
+                                <div class="mb-4 mt-7">
+                                    <button type="submit"
+                                        class="btn-outline-primary w-full hover:bg-blue-700/80 hover:text-white">
+                                        <i class="ti ti-filter text-2xl"></i></button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+
+                    {{-- <a href="{{ route('subscription.index') }}"
                         class="pill {{ request()->has('st') ? 'outlined' : '' }}">All
                         <span class="pl-3 text-xs">{{ $statusCount->get('all') }}</span>
                     </a>
@@ -26,7 +66,7 @@
                             {{ $status->label() }}
                             <span class="pl-3 text-xs">{{ $statusCount->get($status->value) }}</span>
                         </a>
-                    @endforeach
+                    @endforeach --}}
 
                 </div>
 
@@ -35,7 +75,7 @@
                 @if ($subscriptions->isEmpty())
                     <p class="text-dark text-lg font-semibold">No subscriptions found</p>
                 @else
-                    <x-table :captions="['Name', 'Frequency', 'Status', 'Price', ' ']">
+                    <x-table :captions="['Name', 'Frequency', 'Status', 'Price', ' ']" :sort="['start_date','frequency','status','price','']" sort_def="start_date">
 
                         @foreach ($subscriptions as $subscription)
                             <x-table.row>
@@ -98,6 +138,12 @@
                             </x-table.row>
                         @endforeach
                     </x-table>
+
+                    @if ($subscriptions->links()->paginator->hasPages())
+                        <div class="box has-text-centered mt-4 p-4">
+                            {{ $subscriptions->links() }}
+                        </div>
+                    @endif
 
                 @endif
 

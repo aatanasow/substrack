@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Filters\SubscriptionPaymentFilter;
 use App\Models\SubscriptionPayment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -9,18 +10,34 @@ use Illuminate\Support\Facades\Gate;
 
 class SubscriptionPaymentController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, SubscriptionPaymentFilter $filter)
     {
         $user = Auth::user();
 
-        $transactions = $user
-            ->payments()
-            ->with('subscription')
-            ->latest()
-            ->get();
+        $subscriptions = $user
+            ->subscriptions()
+            ->orderBy('title')
+            ->pluck('title', 'id');
+
+        $subscriptions->prepend('All subscriptions', '');
+
+        $validated = $request->validate([
+            'subscription_id' => ['nullable', 'integer'],
+            'confirmed' => ['nullable', 'boolean'],
+            'min_price' => ['nullable', 'numeric'],
+            'max_price' => ['nullable', 'numeric'],
+            'sort' => ['nullable', 'in:payment_date,price,confirmed,subscription_id'],
+            'direction' => ['nullable', 'in:asc,desc'],
+        ]);
+
+        $transactions = $filter
+            ->apply($user->payments()->with('subscription'), $validated)
+            ->paginate(5)
+            ->withQueryString();
 
         return view('transaction.index', [
             'transactions' => $transactions,
+            'subscriptions' => $subscriptions,
         ]);
     }
 
