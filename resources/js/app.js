@@ -1,6 +1,7 @@
 import { Calendar } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import Chart from "chart.js/auto";
 
 document.addEventListener("DOMContentLoaded", () => {
     const btn = document.querySelector("#headerCollapse");
@@ -56,44 +57,67 @@ document.addEventListener("DOMContentLoaded", () => {
         calendar.render();
     }
 
-    // // Get all tabs and tab panels
-    // const tabs = document.querySelectorAll('[role="tab"]');
-    // const panels = document.querySelectorAll('[role="tabpanel"]');
+    const monthlyChart = document.getElementById("monthlyChart");
+    if (monthlyChart) {
 
-    // if (tabs) {
-    //     tabs.forEach((tab) => {
-    //         tab.addEventListener("click", () => {
-    //             // Reset all tabs to inactive state
-    //             tabs.forEach((t) => {
-    //                 t.setAttribute("aria-selected", "false");
-    //                 t.classList.remove(
-    //                     "text-blue-700",
-    //                     "border-blue-700",
-    //                     "dark:text-blue-500",
-    //                     "dark:border-blue-500",
-    //                 );
-    //                 t.classList.add("border-transparent");
-    //             });
+        new Chart(monthlyChart, {
+            type: "bar",
 
-    //             // Hide all panels
-    //             panels.forEach((panel) => panel.classList.add("hidden"));
+            data: {
+                labels: monthlyChartLabels,
+                datasets: [
+                    {
+                        label: "Monthly Spending",
+                        data: monthlyChartValues,
+                    },
+                ],
+            },
 
-    //             // Activate the clicked tab
+            options: {
+                responsive: true,
+                borderRadius:8,
+                maxBarThickness:16,
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    },
+                },
+            },
+        });
+    }
 
-    //             tab.setAttribute("aria-selected", "true");
-    //             tab.classList.add(
-    //                 "text-blue-700",
-    //                 "border-blue-700",
-    //                 "dark:text-blue-500",
-    //                 "dark:border-blue-500",
-    //             );
-    //             tab.classList.remove("border-transparent");
+    const yearlyChart = document.getElementById("yearlyChart");
+    if (yearlyChart) {
 
-    //             // Show the related panel
-    //             document
-    //                 .getElementById(tab.getAttribute("aria-controls"))
-    //                 .classList.remove("hidden");
-    //         });
-    //     });
-    // }
+        new Chart(yearlyChart, {
+            type: "doughnut",
+
+            data: {
+                labels: yearlyChartLabels,
+                datasets: [
+                    {
+                        label: "Yearly Spending",
+                        data: yearlyChartValues,
+                    },
+                ],
+            },
+
+            options: {
+                responsive: true,
+                cutout:'70%',
+                borderRadius:4,
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                },
+
+            },
+        });
+    }
 });
