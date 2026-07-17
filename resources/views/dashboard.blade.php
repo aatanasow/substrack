@@ -9,72 +9,105 @@
             <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
 
                 <x-card class="lg:col-span-2">
-                    <div class="mb-5 block sm:flex sm:justify-between">
-                        <h4 class="text-dark mb-2 text-lg font-semibold sm:mb-0">Spending Overview</h4>
+                    <div class="mb-4 block sm:flex sm:justify-between">
+                        <h4 class="text-dark mb-2 text-lg font-semibold sm:mb-0">Monthly Spending</h4>
                     </div>
-                    <script>
-                        const monthlyChartLabels = @json($monthlyChart['labels']);
-                        const monthlyChartValues = @json($monthlyChart['values']);
-                    </script>
-                    <canvas id="monthlyChart"></canvas>
+                    @if (!$monthlySpending['datasets'])
+                        <p class="text-dark text-sm font-normal">No spending's last year</p>
+                    @else
+                        <script>
+                            const monthlyChartLabels = @json($monthlySpending['labels']);
+                            const monthlyChartDatasets = @json($monthlySpending['datasets']);
+                        </script>
+                        <canvas id="monthlyChart"></canvas>
+                    @endif
                 </x-card>
 
                 <div class="flex flex-col gap-6">
                     <x-card class="flex-1">
-                        <h4 class="text-dark mb-5 text-lg font-semibold">Yearly Breakup</h4>
-                        <div class="flex items-center justify-between gap-6 max-w-full">
-                            <div class="flex flex-col gap-4 max-w-1/2">
-                                <h3 class="text-dark text-[21px] font-semibold">$36,358</h3>
-                                <div class="flex items-center gap-1">
-                                    <span class="bg-success/20 flex h-5 w-5 items-center justify-center rounded-full">
-                                        <i class="ti ti-arrow-up-left text-success"></i>
-                                    </span>
-                                    <p class="text-dark text-sm font-normal">+9%</p>
-                                    <p class="text-nowrap text-sm font-normal text-gray-500">last year</p>
-                                </div>
-                                <div class="flex gap-3">
-                                    <div class="flex items-center gap-2">
-                                        <span class="bg-primary h-2 w-2 rounded-full"></span>
-                                        <p class="text-xs font-normal text-gray-500">2024</p>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <span class="h-2 w-2 rounded-full bg-gray-500/20"></span>
-                                        <p class="text-xs font-normal text-gray-500">2025</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex items-center max-w-1/2">
-                                <script>
-                                    const yearlyChartLabels = @json($yearlyChart['labels']);
-                                    const yearlyChartValues = @json($yearlyChart['values']);
-                                </script>
-                                <canvas id="yearlyChart"></canvas>
-                            </div>
+                        <div class="mb-4 block sm:flex sm:justify-between">
+                            <h4 class="text-dark mb-2 text-lg font-semibold sm:mb-0">Yearly Breakup</h4>
                         </div>
+                        <div class="flex items-center justify-end gap-2 text-xs font-semibold">
+                            @foreach ($yearlyBreakdown['currencies'] as $currency)
+                                <a href="{{ route('dashboard') . '?currency=' . $currency }}"
+                                    class="{{ $yearlyBreakdown['datasets'][0]['label'] === $currency ? 'bg-info' : 'bg-gray-400' }} flex h-5 w-11 items-center justify-center rounded-full text-white">
+                                    {{ $currency }}
+                                </a>
+                            @endforeach
+                        </div>
+                        @if (!$yearlyBreakdown['datasets'])
+                            <p class="text-dark text-sm font-normal">No spending's last year</p>
+                        @else
+                            <div class="flex max-w-full items-center justify-between gap-6">
+                                <div class="max-w-1/2 flex flex-col gap-4">
+                                    <h3 class="text-dark text-[21px] font-semibold">
+                                        {{ Helpers::formatPrice($yearlyBreakdown['datasets'][0]['data'][1], $yearlyBreakdown['datasets'][0]['label']) }}
+                                    </h3>
+                                    <div class="flex items-center gap-1">
+
+                                        @if ($yearlyBreakdown['datasets'][0]['data'][0] == $yearlyBreakdown['datasets'][0]['data'][1])
+                                            <span
+                                                class="bg-info/20 flex h-5 w-5 items-center justify-center rounded-full">
+                                                <i class="ti ti-arrow-left text-info"></i>
+                                            </span>
+                                        @elseif($yearlyBreakdown['datasets'][0]['data'][0] > $yearlyBreakdown['datasets'][0]['data'][1])
+                                            <span
+                                                class="bg-success/20 flex h-5 w-5 items-center justify-center rounded-full">
+                                                <i class="ti ti-arrow-down-left text-success"></i>
+                                            </span>
+                                        @else
+                                            <span
+                                                class="bg-error/20 flex h-5 w-5 items-center justify-center rounded-full">
+                                                <i class="ti ti-arrow-up-left text-error"></i>
+                                            </span>
+                                        @endif
+
+                                        <p class="text-dark text-sm font-normal">
+                                            {{ Helpers::formatDifference($yearlyBreakdown['datasets'][0]['data'][0], $yearlyBreakdown['datasets'][0]['data'][1]) }}
+                                        </p>
+                                        <p class="text-nowrap text-sm font-normal text-gray-500">last year</p>
+                                    </div>
+
+                                </div>
+                                <div class="max-w-1/2 flex items-center">
+                                    <script>
+                                        const yearlyChartLabels = @json($yearlyBreakdown['labels']);
+                                        const yearlyChartDatasets = @json($yearlyBreakdown['datasets']);
+                                    </script>
+                                    <canvas id="yearlyChart"></canvas>
+                                </div>
+                            </div>
+                        @endif
+
                     </x-card>
                     <x-card class="flex-1">
-                        <div class="flex items-center justify-between gap-6">
-                            <div class="flex flex-col gap-5">
-                                <h4 class="text-dark text-lg font-semibold">Monthly Spending</h4>
-                                <div class="gap-4.5 flex flex-col">
-                                    <h3 class="text-dark text-[21px] font-semibold">$6,820</h3>
-                                    <div class="flex items-center gap-1">
-                                        <span class="bg-error/20 flex h-5 w-5 items-center justify-center rounded-full">
-                                            <i class="ti ti-arrow-down-right text-error"></i>
-                                        </span>
-                                        <p class="text-dark text-sm font-normal">+9%</p>
-                                        <p class="text-sm font-normal text-gray-500">last month</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div
-                                class="bg-info flex h-11 w-11 items-center justify-center self-start rounded-full text-white">
-                                <i class="ti ti-currency-dollar text-xl"></i>
-                            </div>
-
+                        <div class="mb-4 block sm:flex sm:justify-between">
+                            <h4 class="text-dark mb-2 text-lg font-semibold sm:mb-0">Spending Overview</h4>
                         </div>
-                        <div id="earning"></div>
+                        <div class="flex items-center justify-end gap-2 text-xs font-semibold">
+                            @foreach ($yearlyBreakdown['currencies'] as $currency)
+                                <a href="{{ route('dashboard') . '?currency=' . $currency }}"
+                                    class="{{ $yearlyBreakdown['datasets'][0]['label'] === $currency ? 'bg-info' : 'bg-gray-400' }} flex h-5 w-11 items-center justify-center rounded-full text-white">
+                                    {{ $currency }}
+                                </a>
+                            @endforeach
+                        </div>
+
+                        <div class="flex justify-between gap-2">
+                            <div>
+                                <h3 class="text-dark text-xl font-semibold">{{ Helpers::formatPrice($spendingOverview['this_month'], $yearlyBreakdown['datasets'][0]['label']) }}</h3>
+                                <p class="text-sm font-normal text-gray-500">This Month</p>
+                            </div>
+                            <div>
+                                <h3 class="text-dark text-xl font-semibold">{{ Helpers::formatPrice($spendingOverview['this_year'], $yearlyBreakdown['datasets'][0]['label']) }}</h3>
+                                <p class="text-sm font-normal text-gray-500">This Year</p>
+                            </div>
+                            <div>
+                                <h3 class="text-dark text-xl font-semibold">{{ Helpers::formatPrice($spendingOverview['lifetime'], $yearlyBreakdown['datasets'][0]['label']) }}</h3>
+                                <p class="text-sm font-normal text-gray-500">Lifetime</p>
+                            </div>
+                        </div>
                     </x-card>
                 </div>
             </div>
@@ -89,11 +122,11 @@
                             aria-label="Clear all filters"> View all</a>
                     </div>
 
-                    @if ($transactions->isEmpty())
-                        <p class="text-dark text-md font-normal">No recent transactions</p>
+                    @if ($recentTransactions->isEmpty())
+                        <p class="text-dark text-sm font-normal">No recent transactions</p>
                     @else
                         <ul class="relative">
-                            @foreach ($transactions as $transaction)
+                            @foreach ($recentTransactions as $transaction)
                                 <li class="relative flex min-h-20 overflow-hidden">
                                     <div class="text-dark w-2/6 py-1.5 text-end text-sm">
                                         {{ $transaction->payment_date->toFormattedDateString() }}
@@ -116,56 +149,58 @@
                     @endif
                 </x-card>
                 <x-card class="lg:col-span-2">
-                    <div class="mb-1 block justify-between sm:flex">
+                    <div class="mb-4 block justify-between sm:flex">
                         <h4 class="text-dark mb-1 text-lg font-semibold sm:mb-0">Expiring Subscriptions</h4>
 
                         <a href="{{ route('subscription.index') }}" type="button"
                             class="ml-auto cursor-pointer text-sm font-semibold text-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                             aria-label="Clear all filters"> View all</a>
                     </div>
-                    <div class="relative overflow-x-auto">
 
-                        @if ($upcomingPayments->isEmpty())
-                            <p class="text-dark text-lg font-semibold">No expiring subscriptions found</p>
-                        @else
-                            <x-table :captions="['Name', 'Next Payment', 'Price']">
 
-                                @foreach ($upcomingPayments as $item)
-                                    <x-table.row>
-                                        <x-table.data>
-                                            <a href="{{ route('subscription.show', $item['subscription']) }}">
-                                                <div class="flex items-center gap-3">
-                                                    @if ($item['subscription']->image_path)
-                                                        <img class="h-9 w-9 rounded-full object-cover"
-                                                            src="{{ asset('storage/' . $item['subscription']->image_path) }}"
-                                                            alt aria-hidden="true">
-                                                    @else
-                                                        <img class="h-9 w-9 rounded-full object-cover"
-                                                            src="/images/logos/no-image.png" alt aria-hidden="true">
-                                                    @endif
+                    @if ($upcomingPayments->isEmpty())
+                        <div class="relative overflow-x-auto">
+                            <p class="text-dark text-sm font-normal">No expiring subscriptions</p>
 
-                                                    <div>
-                                                        <h3 class="text-dark line-clamp-1 font-semibold">
-                                                            {{ $item['subscription']->title }}
-                                                        </h3>
-                                                    </div>
+                        </div>
+                    @else
+                        <x-table :captions="['Name', 'Next Payment', 'Price']" class="-mt-3">
+
+                            @foreach ($upcomingPayments as $item)
+                                <x-table.row>
+                                    <x-table.data>
+                                        <a href="{{ route('subscription.show', $item['subscription']) }}">
+                                            <div class="flex items-center gap-3">
+                                                @if ($item['subscription']->image_path)
+                                                    <img class="h-9 w-9 rounded-full object-cover"
+                                                        src="{{ asset('storage/' . $item['subscription']->image_path) }}"
+                                                        alt aria-hidden="true">
+                                                @else
+                                                    <img class="h-9 w-9 rounded-full object-cover"
+                                                        src="/images/logos/no-image.png" alt aria-hidden="true">
+                                                @endif
+
+                                                <div>
+                                                    <h3 class="text-dark line-clamp-1 font-semibold">
+                                                        {{ $item['subscription']->title }}
+                                                    </h3>
                                                 </div>
-                                            </a>
-                                        </x-table.data>
-                                        <x-table.data class="w-25">
-                                            <span
-                                                class="font-normal text-gray-500">{{ $item['next_payment']->toFormattedDateString() }}</span>
-                                        </x-table.data>
-                                        <x-table.data class="w-25">
-                                            <span
-                                                class="text-dark text-base font-semibold">{{ $item['subscription']->formatPrice($item['subscription']->price, $item['subscription']->currency) }}
-                                            </span>
-                                        </x-table.data>
-                                    </x-table.row>
-                                @endforeach
-                            </x-table>
-                        @endif
-                    </div>
+                                            </div>
+                                        </a>
+                                    </x-table.data>
+                                    <x-table.data class="w-25">
+                                        <span
+                                            class="font-normal text-gray-500">{{ $item['next_payment']->toFormattedDateString() }}</span>
+                                    </x-table.data>
+                                    <x-table.data class="w-25">
+                                        <span
+                                            class="text-dark text-base font-semibold">{{ $item['subscription']->formatPrice($item['subscription']->price, $item['subscription']->currency) }}
+                                        </span>
+                                    </x-table.data>
+                                </x-table.row>
+                            @endforeach
+                        </x-table>
+                    @endif
                 </x-card>
             </div>
         </div>

@@ -59,32 +59,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const monthlyChart = document.getElementById("monthlyChart");
     if (monthlyChart) {
-
         new Chart(monthlyChart, {
             type: "bar",
 
             data: {
                 labels: monthlyChartLabels,
-                datasets: [
-                    {
-                        label: "Monthly Spending",
-                        data: monthlyChartValues,
-                    },
-                ],
+                datasets: monthlyChartDatasets,
             },
 
             options: {
                 responsive: true,
-                borderRadius:8,
-                maxBarThickness:16,
+                borderRadius: 5,
+                maxBarThickness: 15,
                 plugins: {
                     legend: {
-                        display: false,
+                        display: true,
+                        position: "top",
+                        align: "end",
+                        labels: {
+                            usePointStyle: true,
+                            pointStyle: "circle",
+                        },
                     },
                 },
                 scales: {
+                    x: {
+                        border: {
+                            display: true,
+                        },
+                        grid: {
+                            display: false,
+                        },
+                    },
                     y: {
                         beginAtZero: true,
+                        border: {
+                            display: false,
+                        },
+                        grid: {
+                            color: '#eeeeee',
+                            tickBorderDash:[2,2],
+                        },
                     },
                 },
             },
@@ -93,30 +108,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const yearlyChart = document.getElementById("yearlyChart");
     if (yearlyChart) {
-
         new Chart(yearlyChart, {
             type: "doughnut",
 
             data: {
                 labels: yearlyChartLabels,
-                datasets: [
-                    {
-                        label: "Yearly Spending",
-                        data: yearlyChartValues,
-                    },
-                ],
+                datasets: yearlyChartDatasets,
             },
 
             options: {
                 responsive: true,
-                cutout:'70%',
-                borderRadius:4,
+                cutout: "65%",
+                borderRadius: 4,
                 plugins: {
                     legend: {
-                        display: false,
+                        display: true,
+                        position: "bottom",
+                        align: "center",
+                        labels: {
+                            usePointStyle: true,
+                            pointStyle: "circle",
+                        },
                     },
                 },
-
             },
         });
     }

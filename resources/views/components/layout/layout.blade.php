@@ -12,7 +12,7 @@
     <title>SubTrack - track your subscriptions</title>
 </head>
 
-<body class="bg-info/5">
+<body class="bg-info/5 overflow-x-hidden">
         <x-layout.nav>
 
         </x-layout.nav>

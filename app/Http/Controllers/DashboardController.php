@@ -2,56 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Subscription;
+// use Illuminate\Http\Request;
+
+use App\Enums\SubscriptionCurrency;
+use App\Services\DashboardService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class DashboardController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, DashboardService $dashboard)
     {
         $user = Auth::user();
 
-        $transactions = $user
-            ->payments()
-            ->with('subscription')
-            ->latest()
-            ->take(5)
-            ->get();
+        // $validated = $request->validate([
+        //     'currency' => ['nullable', Rule::enum(SubscriptionCurrency::class)],
+        // ]);
 
-        $subscriptions = $user
-            ->subscriptions()
-            ->where('status','active')
-            ->get();
-
-        $upcomingPayments = $subscriptions
-        ->map(function ($subscription) {
-            return [
-                'subscription' => $subscription,
-                'next_payment' => $subscription->getNextPaymentDate(),
-            ];
-        })
-        ->sortBy('next_payment')
-        ->take(5)
-        ->values();
-
-        $monthlyChart = [
-            'labels' => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun' , 'Jul'],
-            'values' => ['45.00', '20.86', '67.56', '5.56', '27.56', '55.34', '175.31']
-        ];
-
-        $yearlyChart = [
-            'labels' => ['2024', '2025', '2026'],
-            'values' => ['45.00', '20.86', '67.56']
-        ];
-
+        $currency = $request->currency;
+        // validate the query /simple/
+        if (! in_array(strtolower($currency), SubscriptionCurrency::values())) {
+            $currency = 'USD';
+        }
 
         return view('dashboard', [
-            'monthlyChart' => $monthlyChart,
-            'yearlyChart' => $yearlyChart,
-            'transactions' => $transactions,
-            'upcomingPayments' => $upcomingPayments,
+            'monthlySpending' => $dashboard->monthlySpending($user),
+            'yearlyBreakdown' => $dashboard->yearlyBreakdown($user, 2, $currency),
+            'spendingOverview' => $dashboard->spendingOverview($user, $currency),
+            'recentTransactions' => $dashboard->recentTransactions($user),
+            'upcomingPayments' => $dashboard->upcomingPayments($user),
         ]);
 
     }

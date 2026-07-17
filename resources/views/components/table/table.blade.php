@@ -1,7 +1,7 @@
 @props(['captions' => [], 'sort' => [], 'sort_def' => ''])
 
 <div class="relative overflow-x-auto">
-    <table {{ $attributes->merge(['class' => 'my-2.5 w-full whitespace-nowrap text-left text-sm']) }}>
+    <table {{ $attributes->merge(['class' => 'w-full whitespace-nowrap text-left text-sm']) }}>
         <thead class="text-gray-700">
             <tr class="text-dark font-semibold">
                 @if ($captions)
