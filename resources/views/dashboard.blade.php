@@ -1,11 +1,7 @@
 <x-layout>
     <div class="container flex flex-col gap-6 py-5">
 
-        {{-- <h1 class="my-5 text-center text-2xl">
-            <span class="font-bold">Welcome {{ auth()->user()->name }}</span>
-        </h1> --}}
-
-        <div class="flex w-full flex-col gap-6 py-5">
+        <div class="flex w-full flex-col gap-6">
             <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
 
                 <x-card class="lg:col-span-2">
@@ -31,7 +27,7 @@
                         <div class="flex items-center justify-end gap-2 text-xs font-semibold">
                             @foreach ($yearlyBreakdown['currencies'] as $currency)
                                 <a href="{{ route('dashboard') . '?currency=' . $currency }}"
-                                    class="{{ $yearlyBreakdown['datasets'][0]['label'] === $currency ? 'bg-info' : 'bg-gray-400' }} flex h-5 w-11 items-center justify-center rounded-full text-white">
+                                    class="{{ $yearlyBreakdown['datasets']['label'] === $currency ? 'bg-info' : 'bg-gray-400' }} flex h-5 w-11 items-center justify-center rounded-full text-white">
                                     {{ $currency }}
                                 </a>
                             @endforeach
@@ -42,16 +38,16 @@
                             <div class="flex max-w-full items-center justify-between gap-6">
                                 <div class="max-w-1/2 flex flex-col gap-4">
                                     <h3 class="text-dark text-[21px] font-semibold">
-                                        {{ Helpers::formatPrice($yearlyBreakdown['datasets'][0]['data'][1], $yearlyBreakdown['datasets'][0]['label']) }}
+                                        {{ Helpers::formatPrice($yearlyBreakdown['datasets']['data'][1], $yearlyBreakdown['datasets']['label']) }}
                                     </h3>
                                     <div class="flex items-center gap-1">
 
-                                        @if ($yearlyBreakdown['datasets'][0]['data'][0] == $yearlyBreakdown['datasets'][0]['data'][1])
+                                        @if ($yearlyBreakdown['datasets']['data'][0] == $yearlyBreakdown['datasets']['data'][1])
                                             <span
                                                 class="bg-info/20 flex h-5 w-5 items-center justify-center rounded-full">
                                                 <i class="ti ti-arrow-left text-info"></i>
                                             </span>
-                                        @elseif($yearlyBreakdown['datasets'][0]['data'][0] > $yearlyBreakdown['datasets'][0]['data'][1])
+                                        @elseif($yearlyBreakdown['datasets']['data'][0] > $yearlyBreakdown['datasets']['data'][1])
                                             <span
                                                 class="bg-success/20 flex h-5 w-5 items-center justify-center rounded-full">
                                                 <i class="ti ti-arrow-down-left text-success"></i>
@@ -64,7 +60,7 @@
                                         @endif
 
                                         <p class="text-dark text-sm font-normal">
-                                            {{ Helpers::formatDifference($yearlyBreakdown['datasets'][0]['data'][0], $yearlyBreakdown['datasets'][0]['data'][1]) }}
+                                            {{ Helpers::formatDifference($yearlyBreakdown['datasets']['data'][0], $yearlyBreakdown['datasets']['data'][1]) }}
                                         </p>
                                         <p class="text-nowrap text-sm font-normal text-gray-500">last year</p>
                                     </div>
@@ -88,7 +84,7 @@
                         <div class="flex items-center justify-end gap-2 text-xs font-semibold">
                             @foreach ($yearlyBreakdown['currencies'] as $currency)
                                 <a href="{{ route('dashboard') . '?currency=' . $currency }}"
-                                    class="{{ $yearlyBreakdown['datasets'][0]['label'] === $currency ? 'bg-info' : 'bg-gray-400' }} flex h-5 w-11 items-center justify-center rounded-full text-white">
+                                    class="{{ $yearlyBreakdown['datasets']['label'] === $currency ? 'bg-info' : 'bg-gray-400' }} flex h-5 w-11 items-center justify-center rounded-full text-white">
                                     {{ $currency }}
                                 </a>
                             @endforeach
@@ -96,15 +92,15 @@
 
                         <div class="flex justify-between gap-2">
                             <div>
-                                <h3 class="text-dark text-xl font-semibold">{{ Helpers::formatPrice($spendingOverview['this_month'], $yearlyBreakdown['datasets'][0]['label']) }}</h3>
+                                <h3 class="text-dark text-xl font-semibold">{{ Helpers::formatPrice($spendingOverview['this_month'], $yearlyBreakdown['datasets']['label']) }}</h3>
                                 <p class="text-sm font-normal text-gray-500">This Month</p>
                             </div>
                             <div>
-                                <h3 class="text-dark text-xl font-semibold">{{ Helpers::formatPrice($spendingOverview['this_year'], $yearlyBreakdown['datasets'][0]['label']) }}</h3>
+                                <h3 class="text-dark text-xl font-semibold">{{ Helpers::formatPrice($spendingOverview['this_year'], $yearlyBreakdown['datasets']['label']) }}</h3>
                                 <p class="text-sm font-normal text-gray-500">This Year</p>
                             </div>
                             <div>
-                                <h3 class="text-dark text-xl font-semibold">{{ Helpers::formatPrice($spendingOverview['lifetime'], $yearlyBreakdown['datasets'][0]['label']) }}</h3>
+                                <h3 class="text-dark text-xl font-semibold">{{ Helpers::formatPrice($spendingOverview['lifetime'], $yearlyBreakdown['datasets']['label']) }}</h3>
                                 <p class="text-sm font-normal text-gray-500">Lifetime</p>
                             </div>
                         </div>
@@ -140,7 +136,7 @@
                                     <div class="text-dark w-3/6 py-1.5 text-sm font-normal">
                                         <div>{{ $transaction->subscription->title }}</div>
                                         <div class="text-gray-500">
-                                            {{ $transaction->subscription->formatPrice($transaction->price, $transaction->subscription->currency) }}
+                                            {{ Helpers::formatPrice($transaction->price, $transaction->subscription->currency->value) }}
                                         </div>
                                     </div>
                                 </li>
@@ -194,7 +190,7 @@
                                     </x-table.data>
                                     <x-table.data class="w-25">
                                         <span
-                                            class="text-dark text-base font-semibold">{{ $item['subscription']->formatPrice($item['subscription']->price, $item['subscription']->currency) }}
+                                            class="text-dark text-base font-semibold">{{ Helpers::formatPrice($item['subscription']->price, $item['subscription']->currency->value) }}
                                         </span>
                                     </x-table.data>
                                 </x-table.row>

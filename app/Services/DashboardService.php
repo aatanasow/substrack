@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
 class DashboardService
@@ -36,38 +37,68 @@ class DashboardService
             ->get();
     }
 
-    public function monthlySpending(User $user, $period = 12)
+    private function paymentQuery(User $user)
     {
-        $period = $period - 1;
-        $payments = DB::table('subscriptions_payments')
+        return DB::table('subscriptions_payments')
             ->join(
                 'subscriptions',
                 'subscriptions.id',
                 '=',
                 'subscriptions_payments.subscription_id'
             )
+            ->where('user_id', $user->id)
+            ->where('subscriptions_payments.confirmed', true);
+    }
+
+    private function applyDateRange(Builder $query, string $unit, int $period)
+    {
+        $start = match ($unit) {
+            'month' => now()->subMonths($period)->startOfMonth(),
+            'year' => now()->subYears($period)->startOfYear(),
+            default => now(),
+        };
+
+        return $query->where('subscriptions_payments.payment_date', '>=', $start);
+    }
+
+    private function buildPeriodLabels(int $period, string $unit)
+    {
+        $period = max(0, $period - 1);
+        $periods = collect();
+
+        for ($i = $period; $i >= 0; $i--) {
+            $date = match ($unit) {
+                'month' => now()->subMonths($i),
+                'year' => now()->subYears($i),
+                default => now()->subYears($i),
+            };
+
+            $periods->push([
+                'key' => $unit === 'month' ? $date->format('Y-m') : $date->format('Y'),
+                'label' => $date->format($unit === 'month' ? 'M' : 'Y'),
+            ]);
+        }
+
+        return $periods;
+    }
+
+    public function monthlySpending(User $user, $period = 12)
+    {
+        $period = max(0, $period - 1);
+        $payments = $this->paymentQuery($user)
             ->select(
                 DB::raw("DATE_FORMAT(payment_date, '%Y-%m') as month"),
                 DB::raw('upper(subscriptions.currency) as currency'),
                 DB::raw('SUM(subscriptions_payments.price) as total')
             )
-            ->where('user_id', $user->id)
-            ->where('subscriptions_payments.confirmed', true)
-            ->where('subscriptions_payments.payment_date', '>=', now()->subMonths($period)->startOfMonth())
+            ->when($period >= 0, function ($query) use ($period) {
+                return $this->applyDateRange($query, 'month', $period);
+            })
             ->groupBy('month', 'currency')
             ->orderBy('month')
             ->get();
 
-        $months = collect();
-
-        for ($i = $period; $i >= 0; $i--) {
-            $date = now()->subMonths($i);
-
-            $months->push([
-                'key' => $date->format('Y-m'),
-                'label' => $date->format('M'),
-            ]);
-        }
+        $months = $this->buildPeriodLabels($period + 1, 'month');
 
         $currencies = $payments
             ->pluck('currency')
@@ -106,37 +137,22 @@ class DashboardService
 
     public function yearlyBreakdown(User $user, $period = 2, $currency = 'USD')
     {
-        $period = $period - 1;
+        $period = max(0, $period - 1);
 
-        $payments = DB::table('subscriptions_payments')
-            ->join(
-                'subscriptions',
-                'subscriptions.id',
-                '=',
-                'subscriptions_payments.subscription_id'
-            )
+        $payments = $this->paymentQuery($user)
             ->select(
                 DB::raw("DATE_FORMAT(payment_date, '%Y') as year"),
                 DB::raw('upper(subscriptions.currency) as currency'),
                 DB::raw('SUM(subscriptions_payments.price) as total')
             )
-            ->where('user_id', $user->id)
-            ->where('subscriptions_payments.confirmed', true)
-            ->where('subscriptions_payments.payment_date', '>=', now()->subYears($period)->startOfYear())
+            ->when($period >= 0, function ($query) use ($period) {
+                return $this->applyDateRange($query, 'year', $period);
+            })
             ->groupBy('year', 'currency')
             ->orderBy('year')
             ->get();
 
-        $years = collect();
-
-        for ($i = $period; $i >= 0; $i--) {
-            $date = now()->subYears($i);
-
-            $years->push([
-                'key' => $date->format('Y'),
-                'label' => $date->format('Y'),
-            ]);
-        }
+        $years = $this->buildPeriodLabels($period + 1, 'year');
 
         $currencies = $payments
             ->pluck('currency')
@@ -155,7 +171,7 @@ class DashboardService
             $data[] = $payment ? (float) $payment->total : 0;
         }
 
-        $datasets[] = [
+        $datasets = [
             'label' => $currency,
             'data' => $data,
         ];
@@ -173,53 +189,29 @@ class DashboardService
     public function spendingOverview(User $user, $currency = 'USD')
     {
 
-        $this_month = DB::table('subscriptions_payments')
-            ->join(
-                'subscriptions',
-                'subscriptions.id',
-                '=',
-                'subscriptions_payments.subscription_id'
-            )
+        $this_month = $this->paymentQuery($user)
             ->select(
                 DB::raw('upper(subscriptions.currency) as currency'),
                 DB::raw('SUM(subscriptions_payments.price) as total')
             )
-            ->where('user_id', $user->id)
-            ->where('subscriptions_payments.confirmed', true)
             ->where('subscriptions_payments.payment_date', '>=', now()->startOfMonth())
             ->groupBy('currency')
             ->get();
 
-        $this_year = DB::table('subscriptions_payments')
-            ->join(
-                'subscriptions',
-                'subscriptions.id',
-                '=',
-                'subscriptions_payments.subscription_id'
-            )
+        $this_year = $this->paymentQuery($user)
             ->select(
                 DB::raw('upper(subscriptions.currency) as currency'),
                 DB::raw('SUM(subscriptions_payments.price) as total')
             )
-            ->where('user_id', $user->id)
-            ->where('subscriptions_payments.confirmed', true)
             ->where('subscriptions_payments.payment_date', '>=', now()->startOfYear())
             ->groupBy('currency')
             ->get();
 
-        $lifetime = DB::table('subscriptions_payments')
-            ->join(
-                'subscriptions',
-                'subscriptions.id',
-                '=',
-                'subscriptions_payments.subscription_id'
-            )
+        $lifetime = $this->paymentQuery($user)
             ->select(
                 DB::raw('upper(subscriptions.currency) as currency'),
                 DB::raw('SUM(subscriptions_payments.price) as total')
             )
-            ->where('user_id', $user->id)
-            ->where('subscriptions_payments.confirmed', true)
             ->groupBy('currency')
             ->get();
 

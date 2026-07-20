@@ -112,7 +112,7 @@
                                 </x-table.data>
                                 <x-table.data class="w-25">
                                     <span
-                                        class="text-dark text-base font-semibold">{{ $subscription->formatPrice($subscription->price, $subscription->currency) }}
+                                        class="text-dark text-base font-semibold">{{ Helpers::formatPrice($subscription->price, $subscription->currency->value) }}
                                     </span>
                                 </x-table.data>
                                 <x-table.data class="w-25 text-right">

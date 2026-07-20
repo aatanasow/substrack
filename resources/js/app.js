@@ -113,7 +113,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
             data: {
                 labels: yearlyChartLabels,
-                datasets: yearlyChartDatasets,
+                datasets: [{
+                    label: yearlyChartDatasets['label'],
+                    data: yearlyChartDatasets['data']
+                }],
             },
 
             options: {

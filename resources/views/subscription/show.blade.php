@@ -86,7 +86,7 @@
                     <div class="flex flex-1 flex-col space-y-1">
                         <div class="text-xs text-gray-500">Price</div>
                         <div class="card-section flex-1">
-                            {{ $subscription->formatPrice($subscription->price, $subscription->currency) }}
+                            {{ Helpers::formatPrice($subscription->price, $subscription->currency->value) }}
                         </div>
                     </div>
 
@@ -100,7 +100,7 @@
                     <div class="flex flex-1 flex-col space-y-1">
                         <div class="text-xs text-gray-500">Total Spent</div>
                         <div class="card-section flex-1">
-                            {{ $subscription->formatPrice($subscription->getSubscriptionTotal(), $subscription->currency) }}
+                            {{ Helpers::formatPrice($subscription->getSubscriptionTotal(), $subscription->currency->value) }}
                             <div class="text-xs text-gray-700">{{ $subscription->getSubscriptionsCount() }}
                                 {{ $subscription->getSubscriptionsCount() === 1 ? 'payment' : 'payments' }} </div>
                         </div>

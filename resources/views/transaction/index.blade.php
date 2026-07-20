@@ -90,7 +90,7 @@
                                 </x-table.data>
                                 <x-table.data class="w-25">
                                     <span class="text-dark text-base font-semibold">
-                                        {{ $transaction->subscription->formatPrice($transaction->price, $transaction->subscription->currency) }}
+                                        {{ Helpers::formatPrice($transaction->price, $transaction->subscription->currency->value) }}
                                     </span>
                                 </x-table.data>
                                 <x-table.data class="w-25">

@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Number;
 
 // #[Unguarded]
 #[Guarded([])]
@@ -45,13 +44,6 @@ class Subscription extends Model
     public function payments(): HasMany
     {
         return $this->hasMany(SubscriptionPayment::class);
-    }
-
-    public static function formatPrice(float $price, SubscriptionCurrency $currency)
-    {
-        return Number::withCurrency($currency->value, function () use ($price) {
-            return Number::currency($price);
-        });
     }
 
     public static function statusCount(User $user): Collection
@@ -96,10 +88,5 @@ class Subscription extends Model
     public function getSubscriptionTotal(): string
     {
         return $this->payments()->where('confirmed', 1)->sum('price');
-
-        // $payments = $this->payments()->where('confirmed', 1)->get();
-        // return $payments->reduce(function($sum, $payment){
-        //     return $sum + $payment->price;
-        // });
     }
 }

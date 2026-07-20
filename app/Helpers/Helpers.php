@@ -13,6 +13,13 @@ class Helpers
         return $formatter->formatCurrency((float) $amount, $currency);
     }
 
+    // public static function formatPrice(float $price, SubscriptionCurrency $currency)
+    // {
+    //     return Number::withCurrency($currency->value, function () use ($price) {
+    //         return Number::currency($price);
+    //     });
+    // }
+
     public static function formatDifference(float|int|string $amount1, float|int|string $amount2): string
     {
         if ($amount1 == 0) {
