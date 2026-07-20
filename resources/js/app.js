@@ -97,8 +97,8 @@ document.addEventListener("DOMContentLoaded", () => {
                             display: false,
                         },
                         grid: {
-                            color: '#eeeeee',
-                            tickBorderDash:[2,2],
+                            color: "#eeeeee",
+                            tickBorderDash: [2, 2],
                         },
                     },
                 },
@@ -113,10 +113,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
             data: {
                 labels: yearlyChartLabels,
-                datasets: [{
-                    label: yearlyChartDatasets['label'],
-                    data: yearlyChartDatasets['data']
-                }],
+                datasets: [
+                    {
+                        label: yearlyChartDatasets["label"],
+                        data: yearlyChartDatasets["data"],
+                    },
+                ],
             },
 
             options: {
@@ -135,6 +137,52 @@ document.addEventListener("DOMContentLoaded", () => {
                     },
                 },
             },
+        });
+    }
+
+    const accordionButtons = document.querySelectorAll(".accordion-button");
+
+    if (accordionButtons) {
+        // 1. Initialize first item
+        const firstContent = document.querySelector(".accordion-content");
+        if (firstContent)
+            firstContent.style.maxHeight = firstContent.scrollHeight + "px";
+
+        // Helper function to update UI and Attributes
+        const toggleItem = (btn, isOpen) => {
+            const content = document.getElementById(
+                btn.getAttribute("aria-controls"),
+            );
+            const arrowIcon = btn.querySelector(".arrow-icon");
+
+            btn.setAttribute("aria-expanded", isOpen);
+            content.setAttribute("aria-hidden", !isOpen);
+            content.style.maxHeight = isOpen
+                ? content.scrollHeight + "px"
+                : "0px";
+
+            // Toggle classes
+            arrowIcon.classList.toggle("rotate-180", isOpen);
+
+            const container = btn.closest(".parent-container");
+            if (container) {
+                container.classList.toggle("border-blue-600", isOpen);
+                container.classList.toggle("border-transparent", !isOpen);
+                container.classList.toggle("dark:border-blue-500", isOpen);
+            }
+        };
+
+        accordionButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+                const isExpanding =
+                    button.getAttribute("aria-expanded") !== "true";
+
+                // Close all items
+                accordionButtons.forEach((btn) => toggleItem(btn, false));
+
+                // If the clicked one was closed, open it
+                if (isExpanding) toggleItem(button, true);
+            });
         });
     }
 });
